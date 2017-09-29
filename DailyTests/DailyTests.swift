@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import Daily
+@testable import Diary
 
 class DailyTests: XCTestCase {
     
