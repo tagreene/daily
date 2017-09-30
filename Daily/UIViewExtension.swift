@@ -6,7 +6,7 @@
 //  Copyright © 2017 greene. All rights reserved.
 //
 
-// Extend UIKit to allow general vertical and horizontal animations
+// Extend UIView to allow general vertical and horizontal animations
 
 import UIKit
 
@@ -31,7 +31,7 @@ extension UIView {
         CATransaction.begin()
         CATransaction.setCompletionBlock(completionBlock)
         let animation = CABasicAnimation(keyPath: "position")
-        animation.duration = 0.14
+        animation.duration = 0.1
         animation.repeatCount = 2
         animation.autoreverses = true
         animation.fromValue = NSValue(cgPoint: CGPoint(x: self.center.x, y: self.center.y))
