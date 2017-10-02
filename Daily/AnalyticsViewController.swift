@@ -11,9 +11,15 @@ import Charts
 
 class AnalyticsViewController: UIViewController {
     var completionChart: PieChartView!
+    var activityChart: BarChartView!
     
     let pieChartDataLabels = ["Completed", "Missed"]
     let pieChartCompletionData = [0.64, 0.36]
+    
+    let barChartDataLabels = [Date.init(timeInterval: -604800, since: Date()), Date.init(timeInterval: -518400, since: Date()), Date.init(timeInterval: -345600, since: Date()), Date.init(timeInterval: -259200, since: Date()), Date.init(timeInterval: -172800, since: Date()), Date.init(timeInterval: -86400, since: Date()), Date()]
+    let barChartEntryCountData = [1, 1, 2, 3, 8, 2, 1]
+    
+    
     let screenHeight = UIScreen.main.bounds.height
     let screenWidth = UIScreen.main.bounds.width
     
@@ -21,7 +27,36 @@ class AnalyticsViewController: UIViewController {
         super.viewDidLoad()
         // set up charts here
         setUpPieChart(labels: pieChartDataLabels, values: pieChartCompletionData)
+        setUpBarChart(dates: barChartDataLabels, entryCount: barChartEntryCountData)
+        
         view.backgroundColor = .lightGray
+    }
+    
+    func setUpBarChart(dates: [Date], entryCount: [Int]) {
+        activityChart = BarChartView()
+        var dataEntries: [BarChartDataEntry] = []
+        var days: [String] = []
+        
+        for i in 0..<entryCount.count {
+            let dataEntry = BarChartDataEntry(x: Double(i + 1), y: Double(entryCount[i]))
+            dataEntries.append(dataEntry)
+        }
+        
+        for i in 0..<dates.count {
+            let date = dates[i]
+            let calendar = Calendar.current
+            
+            let month = calendar.component(.month, from: date)
+            let day = calendar.component(.day, from: date)
+            let year = calendar.component(.year, from: date)
+            
+            
+            days.append("\(month)/\(day)/\(year)")
+        }
+        
+        let barChartDataSet = BarChartDataSet(values: dataEntries, label: "Submission Count")
+        let barChartData = BarChartData()
+        
     }
     
     func setUpPieChart(labels: [String], values: [Double]) {
@@ -45,7 +80,7 @@ class AnalyticsViewController: UIViewController {
         completionChart.drawHoleEnabled = false
         completionChart.drawEntryLabelsEnabled = false
         completionChart.isUserInteractionEnabled = false
-        view.addSubview(completionChart)
+//        view.addSubview(completionChart)
         
         let heightConstraint = completionChart.heightAnchor.constraint(equalToConstant: screenHeight * 0.25)
         let widthConstraint = completionChart.widthAnchor.constraint(equalToConstant: screenWidth * 0.5)
