@@ -18,6 +18,7 @@
 		4B6A67F01F7B09A9002F7ACC /* DiaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A67EF1F7B09A9002F7ACC /* DiaryViewController.swift */; };
 		4B6C39651F60B92E00B6074F /* Diary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6C39641F60B92E00B6074F /* Diary.swift */; };
 		4B7AA1441F7EDDCC00824F98 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7AA1431F7EDDCC00824F98 /* UIViewExtension.swift */; };
+		4BB7BD181F82ECAB00AEB13C /* BarChartViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB7BD171F82ECAB00AEB13C /* BarChartViewExtension.swift */; };
 		4BD21E911F7AFDD400BAEC5D /* OurTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD21E901F7AFDD400BAEC5D /* OurTabBarController.swift */; };
 		AE20309F5F3C6F2BB5ACC1E6 /* Pods_DailyUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C269F790B0FC664ADB30C0D0 /* Pods_DailyUITests.framework */; };
 		AE282F608D5DBDC792E1A4C4 /* Pods_DailyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F22D2C01E3BDBBF2954983D /* Pods_DailyTests.framework */; };
@@ -59,6 +60,7 @@
 		4B6A67EF1F7B09A9002F7ACC /* DiaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryViewController.swift; sourceTree = "<group>"; };
 		4B6C39641F60B92E00B6074F /* Diary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Diary.swift; sourceTree = "<group>"; };
 		4B7AA1431F7EDDCC00824F98 /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
+		4BB7BD171F82ECAB00AEB13C /* BarChartViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChartViewExtension.swift; sourceTree = "<group>"; };
 		4BD21E901F7AFDD400BAEC5D /* OurTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OurTabBarController.swift; sourceTree = "<group>"; };
 		5054BA417895FCBB91D6BC77 /* Pods-DailyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DailyTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DailyTests/Pods-DailyTests.debug.xcconfig"; sourceTree = "<group>"; };
 		6EFC478F62A8A4D5A956DABA /* Pods-DailyUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DailyUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DailyUITests/Pods-DailyUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 				4B6A67ED1F7B068D002F7ACC /* AnalyticsViewController.swift */,
 				4B6A67EB1F7B04B3002F7ACC /* Main.storyboard */,
 				4B6C39641F60B92E00B6074F /* Diary.swift */,
+				4BB7BD171F82ECAB00AEB13C /* BarChartViewExtension.swift */,
 				4B6A67EF1F7B09A9002F7ACC /* DiaryViewController.swift */,
 				4B6A35551F60AF8400AA41A5 /* Assets.xcassets */,
 				4B6A355A1F60AF8400AA41A5 /* Info.plist */,
@@ -477,6 +480,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B6A35511F60AF8400AA41A5 /* NewEntryViewController.swift in Sources */,
+				4BB7BD181F82ECAB00AEB13C /* BarChartViewExtension.swift in Sources */,
 				4B6A67EE1F7B068D002F7ACC /* AnalyticsViewController.swift in Sources */,
 				4BD21E911F7AFDD400BAEC5D /* OurTabBarController.swift in Sources */,
 				4B6A67F01F7B09A9002F7ACC /* DiaryViewController.swift in Sources */,
