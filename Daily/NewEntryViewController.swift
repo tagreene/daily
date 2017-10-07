@@ -99,7 +99,7 @@ class NewEntryViewController: UIViewController, UITextViewDelegate {
         let heightConstraint = cancelButton.heightAnchor.constraint(equalToConstant: screenHeight * 0.096)
         
         if #available(iOS 11, *) {
-            let bottomConstraint = cancelButton.bottomAnchor.constraintEqualToSystemSpacingBelow(view.safeAreaLayoutGuide.bottomAnchor, multiplier: 0)
+            let bottomConstraint = cancelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
             bottomConstraint.isActive = true
         } else {
             let bottomConstraint = cancelButton.bottomAnchor.constraint(equalTo: bottomLayoutGuide.topAnchor)
