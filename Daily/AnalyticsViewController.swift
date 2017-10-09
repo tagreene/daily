@@ -25,6 +25,8 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
     var startDatePicker: UIDatePicker!
     var endDatePicker: UIDatePicker!
     var activeTextField = UITextField()
+    var startDateDate: Date!
+    var endDateDate: Date!
     
     
     
@@ -69,7 +71,7 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(mostCommonWordLabel)
         
         mostCommonWordDescription = UILabel()
-        mostCommonWordDescription.text = "is your most commonly used word"
+        mostCommonWordDescription.text = "is your most used word"
         mostCommonWordDescription.font = .systemFont(ofSize: 16)
         mostCommonWordDescription.numberOfLines = 2
         mostCommonWordDescription.lineBreakMode = .byWordWrapping
@@ -229,6 +231,7 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         startDate.font = .systemFont(ofSize: 24)
         startDate.textColor = systemBlue
         startDate.translatesAutoresizingMaskIntoConstraints = false
+        startDateDate = Date()
         view.addSubview(startDate)
         
         endDatePicker = UIDatePicker()
@@ -240,6 +243,7 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         endDate.font = .systemFont(ofSize: 24)
         endDate.textColor = systemBlue
         endDate.translatesAutoresizingMaskIntoConstraints = false
+        endDateDate = Date()
         view.addSubview(endDate)
         
         submitButton = UIButton(type: .system)
@@ -281,12 +285,16 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/YY"
         startDate.text = dateFormatter.string(from: sender.date)
+        startDateDate = sender.date
+        print(startDateDate)
     }
     
     @objc func handleEndDatePicker(_ sender: UIDatePicker) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/YY"
         endDate.text = dateFormatter.string(from: sender.date)
+        endDateDate = sender.date
+        print(endDateDate)
     }
     
     @objc func dismissKeyboard(_ sender: UITapGestureRecognizer) {
