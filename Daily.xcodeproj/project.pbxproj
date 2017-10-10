@@ -12,13 +12,13 @@
 		4B6A35561F60AF8400AA41A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B6A35551F60AF8400AA41A5 /* Assets.xcassets */; };
 		4B6A35641F60AF8400AA41A5 /* DailyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A35631F60AF8400AA41A5 /* DailyTests.swift */; };
 		4B6A356F1F60AF8400AA41A5 /* DailyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A356E1F60AF8400AA41A5 /* DailyUITests.swift */; };
-		4B6A357D1F60B72000AA41A5 /* Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A357C1F60B72000AA41A5 /* Entry.swift */; };
 		4B6A67EC1F7B04B3002F7ACC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B6A67EB1F7B04B3002F7ACC /* Main.storyboard */; };
 		4B6A67EE1F7B068D002F7ACC /* AnalyticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A67ED1F7B068D002F7ACC /* AnalyticsViewController.swift */; };
 		4B6A67F01F7B09A9002F7ACC /* DiaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A67EF1F7B09A9002F7ACC /* DiaryViewController.swift */; };
-		4B6C39651F60B92E00B6074F /* Diary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6C39641F60B92E00B6074F /* Diary.swift */; };
 		4B7AA1441F7EDDCC00824F98 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7AA1431F7EDDCC00824F98 /* UIViewExtension.swift */; };
 		4BB7BD181F82ECAB00AEB13C /* BarChartViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB7BD171F82ECAB00AEB13C /* BarChartViewExtension.swift */; };
+		4BB81BBD1F8B42F700BD7E20 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4BB81BBB1F8B42F700BD7E20 /* Model.xcdatamodeld */; };
+		4BB81BC11F8B47A400BD7E20 /* Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB81BC01F8B47A400BD7E20 /* Entry.swift */; };
 		4BD21E911F7AFDD400BAEC5D /* OurTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD21E901F7AFDD400BAEC5D /* OurTabBarController.swift */; };
 		4BE2E6981F84566600939CA2 /* BarChartDisplayType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE2E6971F84566600939CA2 /* BarChartDisplayType.swift */; };
 		AE20309F5F3C6F2BB5ACC1E6 /* Pods_DailyUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C269F790B0FC664ADB30C0D0 /* Pods_DailyUITests.framework */; };
@@ -55,13 +55,13 @@
 		4B6A356A1F60AF8400AA41A5 /* DailyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DailyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B6A356E1F60AF8400AA41A5 /* DailyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyUITests.swift; sourceTree = "<group>"; };
 		4B6A35701F60AF8400AA41A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4B6A357C1F60B72000AA41A5 /* Entry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entry.swift; sourceTree = "<group>"; };
 		4B6A67EB1F7B04B3002F7ACC /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		4B6A67ED1F7B068D002F7ACC /* AnalyticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsViewController.swift; sourceTree = "<group>"; };
 		4B6A67EF1F7B09A9002F7ACC /* DiaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryViewController.swift; sourceTree = "<group>"; };
-		4B6C39641F60B92E00B6074F /* Diary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Diary.swift; sourceTree = "<group>"; };
 		4B7AA1431F7EDDCC00824F98 /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
 		4BB7BD171F82ECAB00AEB13C /* BarChartViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChartViewExtension.swift; sourceTree = "<group>"; };
+		4BB81BBC1F8B42F700BD7E20 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		4BB81BC01F8B47A400BD7E20 /* Entry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entry.swift; sourceTree = "<group>"; };
 		4BD21E901F7AFDD400BAEC5D /* OurTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OurTabBarController.swift; sourceTree = "<group>"; };
 		4BE2E6971F84566600939CA2 /* BarChartDisplayType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChartDisplayType.swift; sourceTree = "<group>"; };
 		5054BA417895FCBB91D6BC77 /* Pods-DailyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DailyTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DailyTests/Pods-DailyTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -131,12 +131,12 @@
 				4B6A354E1F60AF8400AA41A5 /* AppDelegate.swift */,
 				4B7AA1431F7EDDCC00824F98 /* UIViewExtension.swift */,
 				4B6A35501F60AF8400AA41A5 /* NewEntryViewController.swift */,
-				4B6A357C1F60B72000AA41A5 /* Entry.swift */,
 				4BD21E901F7AFDD400BAEC5D /* OurTabBarController.swift */,
 				4B6A67ED1F7B068D002F7ACC /* AnalyticsViewController.swift */,
+				4BB81BBB1F8B42F700BD7E20 /* Model.xcdatamodeld */,
+				4BB81BC01F8B47A400BD7E20 /* Entry.swift */,
 				4BE2E6971F84566600939CA2 /* BarChartDisplayType.swift */,
 				4B6A67EB1F7B04B3002F7ACC /* Main.storyboard */,
-				4B6C39641F60B92E00B6074F /* Diary.swift */,
 				4BB7BD171F82ECAB00AEB13C /* BarChartViewExtension.swift */,
 				4B6A67EF1F7B09A9002F7ACC /* DiaryViewController.swift */,
 				4B6A35551F60AF8400AA41A5 /* Assets.xcassets */,
@@ -484,16 +484,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BB81BC11F8B47A400BD7E20 /* Entry.swift in Sources */,
 				4B6A35511F60AF8400AA41A5 /* NewEntryViewController.swift in Sources */,
 				4BB7BD181F82ECAB00AEB13C /* BarChartViewExtension.swift in Sources */,
 				4B6A67EE1F7B068D002F7ACC /* AnalyticsViewController.swift in Sources */,
 				4BD21E911F7AFDD400BAEC5D /* OurTabBarController.swift in Sources */,
 				4B6A67F01F7B09A9002F7ACC /* DiaryViewController.swift in Sources */,
+				4BB81BBD1F8B42F700BD7E20 /* Model.xcdatamodeld in Sources */,
 				4BE2E6981F84566600939CA2 /* BarChartDisplayType.swift in Sources */,
-				4B6A357D1F60B72000AA41A5 /* Entry.swift in Sources */,
 				4B6A354F1F60AF8400AA41A5 /* AppDelegate.swift in Sources */,
 				4B7AA1441F7EDDCC00824F98 /* UIViewExtension.swift in Sources */,
-				4B6C39651F60B92E00B6074F /* Diary.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -648,6 +648,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -663,6 +664,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -768,6 +770,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		4BB81BBB1F8B42F700BD7E20 /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				4BB81BBC1F8B42F700BD7E20 /* Model.xcdatamodel */,
+			);
+			currentVersion = 4BB81BBC1F8B42F700BD7E20 /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 4B6A35431F60AF8400AA41A5 /* Project object */;
 }

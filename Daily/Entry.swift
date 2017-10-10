@@ -2,18 +2,12 @@
 //  Entry.swift
 //  Daily
 //
-//  Created by Trent Greene on 9/6/17.
+//  Created by Trent Greene on 10/9/17.
 //  Copyright © 2017 greene. All rights reserved.
 //
 
-import Foundation
+import CoreData
 
-class Entry {
-    var entryText: String
-    var entryDate: Date
+class Entry: NSManagedObject {
     
-    init(entryText: String) {
-        self.entryText = entryText
-        self.entryDate = Date()
-    }
 }

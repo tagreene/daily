@@ -8,6 +8,7 @@
 
 import UIKit
 import Charts
+import CoreData
 
 class AnalyticsViewController: UIViewController, UITextFieldDelegate {
     var completionChart: PieChartView!
@@ -27,7 +28,8 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
     var activeTextField = UITextField()
     var startDateDate: Date!
     var endDateDate: Date!
-    
+    var firstEntryDate: Date!
+    var lastEntryDate: Date!
     
     
     var ourGreen = UIColor.init(red: 95.0/255.0, green: 255.0/255.0, blue: 88.0/255.0, alpha: 0.8)
@@ -54,6 +56,7 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         // set up charts here
 //        view.backgroundColor = .white
+        setUpDates()
         setUpDateSelection()
         setUpBarChart(dates: barChartDataLabels, entryCount: barChartEntryCountData, color: ourBlue)
         setUpPieChart(labels: pieChartDataLabels, values: pieChartCompletionData)
@@ -61,6 +64,42 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         initTapGestureRecognizer()
 
         addGradient()
+    }
+    
+    func setUpDates() {
+        let context = AppDelegate.viewContext
+        
+        /*
+         Currently, if you use perform here, your app will crash as setUpDateSelection() will try to unwrap firstEntryDate
+         before you've retrieved them
+ 
+         i.e. you have a race condition
+ 
+         performAndWait solves this, but maybe theres a better way
+         perhaps pass set up dates in a closure?
+ 
+         As of now, performAndWait does not cause a real performance loss, so maybe that is the best answer
+         */
+        
+        context.performAndWait {
+            let request: NSFetchRequest<Entry> = Entry.fetchRequest()
+            request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+            request.fetchLimit = 1
+            if let entries = try? context.fetch(request) {
+                self.firstEntryDate = entries[0].date
+                print(self.firstEntryDate)
+            }
+        }
+        
+        context.performAndWait {
+            let request: NSFetchRequest<Entry> = Entry.fetchRequest()
+            request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
+            request.fetchLimit = 1
+            if let entries = try? context.fetch(request) {
+                self.lastEntryDate = entries[0].date
+                print(self.lastEntryDate)
+            }
+        }
     }
     
     func setUpWordLabels() {
@@ -222,12 +261,17 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
     }
     
     func setUpDateSelection() {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/YY"
+        
         startDatePicker = UIDatePicker()
         startDatePicker.addTarget(self, action: #selector(handleStartDatePicker(_:)), for: .valueChanged)
         startDatePicker.datePickerMode = .date
+        startDatePicker.minimumDate = firstEntryDate
+        startDatePicker.maximumDate = lastEntryDate
         startDate = UITextField()
         startDate.inputView = startDatePicker
-        startDate.text = "03/07/17"
+        startDate.text = dateFormatter.string(from: firstEntryDate)
         startDate.font = .systemFont(ofSize: 24)
         startDate.textColor = systemBlue
         startDate.translatesAutoresizingMaskIntoConstraints = false
@@ -237,9 +281,11 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         endDatePicker = UIDatePicker()
         endDatePicker.addTarget(self, action: #selector(handleEndDatePicker(_:)), for: .valueChanged)
         endDatePicker.datePickerMode = .date
+        endDatePicker.minimumDate = firstEntryDate
+        endDatePicker.maximumDate = lastEntryDate
         endDate = UITextField()
         endDate.inputView = endDatePicker
-        endDate.text = "03/15/18"
+        endDate.text = dateFormatter.string(from: lastEntryDate)
         endDate.font = .systemFont(ofSize: 24)
         endDate.textColor = systemBlue
         endDate.translatesAutoresizingMaskIntoConstraints = false

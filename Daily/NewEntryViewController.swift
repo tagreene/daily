@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class NewEntryViewController: UIViewController, UITextViewDelegate {
 
@@ -19,8 +20,6 @@ class NewEntryViewController: UIViewController, UITextViewDelegate {
     var cancelButton: UIButton!
     var submitButton: UIButton!
     var deleteAlert: UIAlertController!
-    
-    var diary = Diary()
     
     func deleteEntry() {
         let deleteCompletion = {
@@ -48,8 +47,20 @@ class NewEntryViewController: UIViewController, UITextViewDelegate {
     
     @objc func createEntry(_ sender: UIButton) {
         if let entryString = ourTextView.text, entryString != defaultString, entryString != confirmationString {
-            let ourEntry = Entry.init(entryText: entryString)
-            diary.entries.append(ourEntry)
+            
+            let context = AppDelegate.viewContext
+            context.perform {
+                let entry = Entry(context: context)
+                entry.text = entryString
+                entry.date = Date()
+                
+                do {
+                    try context.save()
+                } catch let err {
+                    print(err)
+                }
+            }
+            
             
             // Change Text -- Replace this with better feedback (Haptic?)
             let createCompletion = {
@@ -59,11 +70,17 @@ class NewEntryViewController: UIViewController, UITextViewDelegate {
             
             ourTextView.shakeVertically(createCompletion)
             
-            // Debug print
-            for entry in diary.entries {
-                print("\(entry.entryText) - \(entry.entryDate)")
-                print(screenHeight)
+            // Debug - Is Core Data Working?
+            context.perform {
+                let sortDescriptor = NSSortDescriptor(key: "date", ascending: true)
+                let request: NSFetchRequest<Entry> = Entry.fetchRequest()
+                request.sortDescriptors = [sortDescriptor]
+                if let recentEntries = try? context.fetch(request) {
+                    for entry in recentEntries {
+                        print(entry.date!, entry.text!)
+                    }
                 }
+            }
         }
     }
     
@@ -140,7 +157,6 @@ class NewEntryViewController: UIViewController, UITextViewDelegate {
         ourTextView.text = defaultString
         ourTextView.textColor = UIColor.darkGray
         ourTextView.backgroundColor = UIColor.init(red: 255.0/255.0, green: 255.0/255.0, blue: 255.0/255.0, alpha: 0.8)
-        ourTextView.textAlignment = .justified
         ourTextView.layer.cornerRadius = 5
         ourTextView.font = .systemFont(ofSize: 16)
         ourTextView.translatesAutoresizingMaskIntoConstraints = false
