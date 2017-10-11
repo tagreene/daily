@@ -368,10 +368,10 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
             }
             
             for entry in ourEntryArray {
-                print(entry.date, entry.text)
+                print("\(entry.date!), \(entry.text!)")
             }
             
-            self.entries = entryArray!
+            self.entries = ourEntryArray
         }
     }
     
@@ -385,6 +385,7 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yy"
         startDate.text = dateFormatter.string(from: sender.date)
+        endDatePicker.minimumDate = sender.date
         startDateDate = sender.date
         print(startDateDate)
     }
@@ -393,6 +394,7 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yy"
         endDate.text = dateFormatter.string(from: sender.date)
+        startDatePicker.maximumDate = sender.date
         endDateDate = sender.date
         print(endDateDate)
     }
