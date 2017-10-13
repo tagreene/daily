@@ -46,21 +46,22 @@ extension BarChartView {
         }
     }
     
-    func setBarChartData(xValues: [Date], yValues: [Int], label: String, color: UIColor) {
+    func setBarChartData(dataSource: [(Date, Int)], label: String, color: UIColor) {
         
         var dataEntries: [BarChartDataEntry] = []
+        
         var values: [Double] = []
         var days: [String] = []
         
-        for i in 0..<yValues.count {
-            let dataEntry = BarChartDataEntry(x: Double(i), y: Double(yValues[i]))
+        for i in 0..<dataSource.count {
+            let dataEntry = BarChartDataEntry(x: Double(i), y: Double(dataSource[i].1))
             
             dataEntries.append(dataEntry)
             values.append(dataEntry.y)
         }
         
-        for i in 0..<xValues.count {
-            let date = xValues[i]
+        for i in 0..<dataSource.count {
+            let date = dataSource[i].0
             let calendar = Calendar.current
             
             let month = calendar.component(.month, from: date)
@@ -70,9 +71,12 @@ extension BarChartView {
             days.append("\(month)/\(day)")
         }
         
+        print(days)
+        
         let chartDataSet = BarChartDataSet(values: dataEntries, label: label)
         chartDataSet.colors = [color]
         chartDataSet.valueFormatter = IntValueFormatter(values: values)
+        chartDataSet.valueFont = .systemFont(ofSize: 12.0)
         
         
         let chartData = BarChartData(dataSet: chartDataSet)
@@ -81,8 +85,22 @@ extension BarChartView {
         let xAxis = XAxis()
         xAxis.valueFormatter = chartFormatter
         self.xAxis.valueFormatter = xAxis.valueFormatter
-        
-        
+        self.xAxis.granularity = 1
+
         self.data = chartData
+    }
+    
+    func setBarChartFormatting() {
+        self.chartDescription = nil
+        self.legend.enabled = false
+        self.isUserInteractionEnabled = false
+        self.fitBars = true
+        self.xAxis.drawGridLinesEnabled = false
+        self.xAxis.labelPosition = .bottom
+        self.rightAxis.enabled = false
+        self.leftAxis.enabled = false
+        
+        // The below mimics setting the spaceBottom to zero, but also guards against the x axis autogenerating its minimum to a >0 value in highly dynamic sets
+        self.leftAxis.axisMinimum = 0.0
     }
 }

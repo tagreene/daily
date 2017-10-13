@@ -31,6 +31,7 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
     var firstEntryDate: Date!
     var lastEntryDate: Date!
     var entries = [Entry]()
+    var entryTuples = [(date: Date, int: Int)]()
     
     var ourGreen = UIColor.init(red: 95.0/255.0, green: 255.0/255.0, blue: 88.0/255.0, alpha: 0.8)
     var ourYellow = UIColor.init(red: 255.0/255.0, green: 255.0/255.0, blue: 89.0/255.0, alpha: 0.9)
@@ -38,15 +39,8 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
     var ourSalmon = UIColor.init(red: 240.0/255.0, green: 113.0/255.0, blue: 122.0/255.0, alpha: 1.0)
     var systemBlue = UIColor(red: 0, green: 0.478431, blue: 1, alpha: 1)
     
-    let pieChartDataLabels = ["Completed", "Missed"]
+    let pieChartDataLabels = ["Missed", "Completed"]
     let pieChartCompletionData = [0.36, 0.64]
-    
-    //    let barChartDataLabels = [Date.init(timeInterval: -604800, since: Date()), Date.init(timeInterval: -518400, since: Date()), Date.init(timeInterval: -345600, since: Date()), Date.init(timeInterval: -259200, since: Date()), Date.init(timeInterval: -172800, since: Date()), Date.init(timeInterval: -86400, since: Date()), Date()]
-    //    let barChartEntryCountData = [1, 1, 2, 28, 1, 2, 1]
-    
-    //    Super large data test set
-    let barChartDataLabels = [Date.init(timeInterval: -604800, since: Date()), Date.init(timeInterval: -518400, since: Date()), Date.init(timeInterval: -345600, since: Date()), Date.init(timeInterval: -259200, since: Date()), Date.init(timeInterval: -172800, since: Date()), Date.init(timeInterval: -86400, since: Date()), Date(), Date.init(timeInterval: -604800, since: Date()), Date.init(timeInterval: -518400, since: Date()), Date.init(timeInterval: -345600, since: Date()), Date.init(timeInterval: -259200, since: Date()), Date.init(timeInterval: -172800, since: Date()), Date.init(timeInterval: -86400, since: Date()), Date(), Date.init(timeInterval: -604800, since: Date()), Date.init(timeInterval: -518400, since: Date()), Date.init(timeInterval: -345600, since: Date()), Date.init(timeInterval: -259200, since: Date()), Date.init(timeInterval: -172800, since: Date()), Date.init(timeInterval: -86400, since: Date()), Date()]
-    let barChartEntryCountData = [1, 2, 1, 1, 1, 2, 5, 1, 2, 1, 1, 1, 2, 0, 1, 2, 1, 1, 1, 2, 5]
     
     
     let screenHeight = UIScreen.main.bounds.height
@@ -58,8 +52,9 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         //        view.backgroundColor = .white
         queryForMinMaxDates()
         setUpDateSelection()
-        setUpBarChart(dates: barChartDataLabels, entryCount: barChartEntryCountData, color: ourBlue)
-        setUpPieChart(labels: pieChartDataLabels, values: pieChartCompletionData)
+        updateEntities()
+        setUpBarChart()
+        setUpPieChart()
         setUpWordLabels()
         initTapGestureRecognizer()
         
@@ -117,13 +112,13 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
     
     func setUpWordLabels() {
         mostCommonWordLabel = UILabel()
-        mostCommonWordLabel.text = "Peanuts"
+        mostCommonWordLabel.text = "peanuts"
         mostCommonWordLabel.font = .systemFont(ofSize: 32)
         mostCommonWordLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(mostCommonWordLabel)
         
         mostCommonWordDescription = UILabel()
-        mostCommonWordDescription.text = "is your most used word"
+        mostCommonWordDescription.text = "most used word"
         mostCommonWordDescription.font = .systemFont(ofSize: 16)
         mostCommonWordDescription.numberOfLines = 2
         mostCommonWordDescription.lineBreakMode = .byWordWrapping
@@ -137,7 +132,7 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(averageWordLengthLabel)
         
         averageWordLengthDescription = UILabel()
-        averageWordLengthDescription.text = "Average words \nper entry"
+        averageWordLengthDescription.text = "average word count"
         averageWordLengthDescription.textAlignment = .right
         averageWordLengthDescription.numberOfLines = 2
         averageWordLengthDescription.font = .systemFont(ofSize: 16)
@@ -148,10 +143,10 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         
         if #available(iOS 11, *) {
             mostCommonWordLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
-            averageWordLengthDescription.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
+            averageWordLengthDescription.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24).isActive = true
         } else {
             mostCommonWordLabel.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 16).isActive = true
-            averageWordLengthDescription.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 16).isActive = true
+            averageWordLengthDescription.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 24).isActive = true
         }
         
         mostCommonWordDescription.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 16).isActive = true
@@ -166,28 +161,11 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         averageWordLengthDescription.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -16).isActive = true
     }
     
-    func setUpBarChart(dates: [Date], entryCount: [Int], color: UIColor) {
-        
+    func setUpBarChart() {
         activityChart = BarChartView()
         activityChart.translatesAutoresizingMaskIntoConstraints = false
-        activityChart.chartDescription = nil
-        activityChart.legend.enabled = false
-        activityChart.isUserInteractionEnabled = false
-        activityChart.fitBars = true
-        activityChart.xAxis.drawGridLinesEnabled = false
-        activityChart.xAxis.labelPosition = .bottom
-        activityChart.rightAxis.enabled = false
-        activityChart.leftAxis.enabled = false
-        
-        // The below mimics setting the spaceBottom to zero, but also guards against the x axis autogenerating its minimum to a >0 value in highly dynamic sets
-        activityChart.leftAxis.axisMinimum = 0.0
-        
-        
-        
-        
-        
-        
-        activityChart.setBarChartData(xValues: dates, yValues: entryCount, label: "Daily Activity", color: color)
+        activityChart.setBarChartFormatting()
+        activityChart.setBarChartData(dataSource: entryTuples, label: "Daily Activity", color: ourBlue)
         view.addSubview(activityChart)
         
         let margins = view.layoutMarginsGuide
@@ -197,46 +175,41 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         activityChart.bottomAnchor.constraint(equalTo: startDate.topAnchor, constant: -32).isActive = true
         
         activityChartLabel = UILabel()
-        activityChartLabel.text = { setActivityChartLabelText(data: entryCount) }()
+        activityChartLabel.text = { setActivityChartLabelText(data: entryTuples) }()
         activityChartLabel.font = .systemFont(ofSize: 16)
         activityChartLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(activityChartLabel)
         
         activityChartLabel.bottomAnchor.constraint(equalTo: activityChart.topAnchor, constant: 0).isActive = true
         activityChartLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 16).isActive = true
-        
-        
     }
     
-    func setActivityChartLabelText(data: [Int]) -> String {
+    func setActivityChartLabelText(data: [(Date, Int)]) -> String {
         let totalEntries = Double(data.count)
-        let totalSum = Double(data.reduce(0, +))
+        let totalSum = Double(data.reduce(0) { $0 + $1.1 })
         let average = totalSum / totalEntries
         let string = String(format: "%.1f", average)
         return "Average \(string) entries per day"
     }
     
-    func setUpPieChart(labels: [String], values: [Double]) {
+    func setUpPieChart() {
+        
+        let labels = ["Missed", "Completed"]
+        let countEmptyDays = entryTuples.filter { $0.1 == 0 }.count
+        
+        // The dance below is to get a nice human readible double rounded out of percentEmpty, which is used in the values command
+        // we also get intPercentEmpty, which supplies the pieChartLabel
+        var percentEmpty = Double(countEmptyDays) / Double(entryTuples.count)
+        let intPercentEmpty = Int(round(percentEmpty * 100))
+        percentEmpty = Double(intPercentEmpty / 100)
+        let values: [Double] = [percentEmpty, 1 - percentEmpty]
+        print(values)
+        
+        
         completionChart = PieChartView()
-        var dataEntries: [PieChartDataEntry] = []
-        
-        for i in 0..<values.count {
-            let dataEntry = PieChartDataEntry(value: values[i], label: labels[i])
-            dataEntries.append(dataEntry)
-        }
-        
-        let pieChartDataSet = PieChartDataSet(values: dataEntries, label: "Completion Rate")
-        pieChartDataSet.setColors(ourYellow, ourGreen)
-        pieChartDataSet.drawValuesEnabled = false
-        let pieChartData = PieChartData(dataSet: pieChartDataSet)
-        
-        self.completionChart.data = pieChartData
+        completionChart.setPieChartData(labels: labels, values: values, colors: [ourYellow, ourGreen])
+        completionChart.setPieChartFormatting()
         completionChart.translatesAutoresizingMaskIntoConstraints = false
-        completionChart.legend.enabled = false
-        completionChart.chartDescription = nil
-        completionChart.drawHoleEnabled = false
-        completionChart.drawEntryLabelsEnabled = false
-        completionChart.isUserInteractionEnabled = false
         view.addSubview(completionChart)
         
         // I really, really don't like the way the top and leading anchors of this chart is setup
@@ -248,8 +221,7 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         completionChart.bottomAnchor.constraint(equalTo: activityChartLabel.topAnchor, constant: -8).isActive = true
         
         pieChartLabel = UILabel()
-        let ourPercent = Int(round(pieChartCompletionData[1] * 100))
-        pieChartLabel.text = "\(ourPercent)% of days contained entries in this period"
+        pieChartLabel.text = "\(100 - intPercentEmpty)% completion rate"
         pieChartLabel.translatesAutoresizingMaskIntoConstraints = false
         pieChartLabel.lineBreakMode = .byWordWrapping
         pieChartLabel.numberOfLines = 4
@@ -338,28 +310,43 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
     
     @objc func submitButtonAction(_ sender: UIButton) {
         updateEntities()
+        activityChart.clear()
+        activityChart.setBarChartData(dataSource: entryTuples, label: "Daily Activity", color: ourBlue)
+        
+        
+        let labels = ["Missed", "Completed"]
+        let countEmptyDays = entryTuples.filter { $0.1 == 0 }.count
+        
+        // The dance below is to get a nice human readible double rounded out of percentEmpty, which is used in the values command
+        // we also get intPercentEmpty, which supplies the pieChartLabel
+        var percentEmpty = Double(countEmptyDays) / Double(entryTuples.count)
+        let intPercentEmpty = Int(round(percentEmpty * 100))
+        percentEmpty = Double(intPercentEmpty / 100)
+        let values: [Double] = [percentEmpty, 1 - percentEmpty]
+        print(values)
+        completionChart.clear()
+        completionChart.setPieChartData(labels: labels, values: values, colors: [ourYellow, ourGreen])
+        
     }
     
     func updateEntities() {
-        guard let startDateString = startDate.text, let endDateString = endDate.text else {
-            return
-        }
+        guard let startDateString = startDate.text, let endDateString = endDate.text else { return }
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yy"
         
-        let firstDate = dateFormatter.date(from: startDateString)
-        var lastDate = dateFormatter.date(from: endDateString)
-        guard let unwrappedLastDate = lastDate else { return }
-        lastDate = Date(timeInterval: 60 * 60 * 24, since: unwrappedLastDate)
+        guard var firstDate = dateFormatter.date(from: startDateString) else { return }
+        guard var lastDate = dateFormatter.date(from: endDateString) else { return }
         
-        print("\(firstDate), \(lastDate)")
+        lastDate = Date(timeInterval: 60 * 60 * 24, since: lastDate)
         
         let context = AppDelegate.viewContext
         let ourRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
         ourRequest.sortDescriptors = []
-        ourRequest.predicate = NSPredicate(format: "date >= %a AND date < %a", argumentArray: [firstDate as! NSDate, lastDate as! NSDate])
+        ourRequest.predicate = NSPredicate(format: "date >= %a AND date < %a", argumentArray: [firstDate as NSDate, lastDate as NSDate])
         
-        context.perform {
+        
+        // Can you just add a closure to perform?
+        context.performAndWait {
             let entryArray = try? context.fetch(ourRequest)
             
             guard let ourEntryArray = entryArray else {
@@ -367,12 +354,18 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
                 return
             }
             
-            for entry in ourEntryArray {
-                print("\(entry.date!), \(entry.text!)")
-            }
             
             self.entries = ourEntryArray
         }
+        
+        self.entryTuples.removeAll()
+        while firstDate < lastDate {
+            let countLastDate = Date(timeInterval: 60 * 60 * 24, since: firstDate)
+            let filteredEntries = entries.filter { $0.date! >= firstDate && $0.date! < countLastDate}
+            self.entryTuples.append((date: firstDate, int: filteredEntries.count))
+            firstDate = Date(timeInterval: 60 * 60 * 24, since: firstDate)
+        }
+        print(entryTuples)
     }
     
     func initTapGestureRecognizer() {

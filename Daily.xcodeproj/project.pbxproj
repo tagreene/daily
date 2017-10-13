@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4B232AF11F902D7700F4E039 /* PieChartViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B232AF01F902D7700F4E039 /* PieChartViewExtension.swift */; };
 		4B6A354F1F60AF8400AA41A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A354E1F60AF8400AA41A5 /* AppDelegate.swift */; };
 		4B6A35511F60AF8400AA41A5 /* NewEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A35501F60AF8400AA41A5 /* NewEntryViewController.swift */; };
 		4B6A35561F60AF8400AA41A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B6A35551F60AF8400AA41A5 /* Assets.xcassets */; };
@@ -44,6 +45,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4B232AF01F902D7700F4E039 /* PieChartViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChartViewExtension.swift; sourceTree = "<group>"; };
 		4B6A354B1F60AF8400AA41A5 /* Daily.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Daily.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B6A354E1F60AF8400AA41A5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4B6A35501F60AF8400AA41A5 /* NewEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewEntryViewController.swift; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 				4BE2E6971F84566600939CA2 /* BarChartDisplayType.swift */,
 				4B6A67EB1F7B04B3002F7ACC /* Main.storyboard */,
 				4BB7BD171F82ECAB00AEB13C /* BarChartViewExtension.swift */,
+				4B232AF01F902D7700F4E039 /* PieChartViewExtension.swift */,
 				4B6A67EF1F7B09A9002F7ACC /* DiaryViewController.swift */,
 				4B6A35551F60AF8400AA41A5 /* Assets.xcassets */,
 				4B6A355A1F60AF8400AA41A5 /* Info.plist */,
@@ -493,6 +496,7 @@
 				4BB81BBD1F8B42F700BD7E20 /* Model.xcdatamodeld in Sources */,
 				4BE2E6981F84566600939CA2 /* BarChartDisplayType.swift in Sources */,
 				4B6A354F1F60AF8400AA41A5 /* AppDelegate.swift in Sources */,
+				4B232AF11F902D7700F4E039 /* PieChartViewExtension.swift in Sources */,
 				4B7AA1441F7EDDCC00824F98 /* UIViewExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
