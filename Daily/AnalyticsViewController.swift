@@ -31,7 +31,11 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
     var firstEntryDate: Date!
     var lastEntryDate: Date!
     var entries = [Entry]()
+    var words = [String]()
     var entryTuples = [(date: Date, int: Int)]()
+    var avgWordCount = Double()
+    var wordCountDict = [String : Int]()
+    var mostUsedWord = String()
     
     var ourGreen = UIColor.init(red: 95.0/255.0, green: 255.0/255.0, blue: 88.0/255.0, alpha: 0.8)
     var ourYellow = UIColor.init(red: 255.0/255.0, green: 255.0/255.0, blue: 89.0/255.0, alpha: 0.9)
@@ -55,6 +59,7 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         updateEntities()
         setUpBarChart()
         setUpPieChart()
+        breakOutWords()
         setUpWordLabels()
         initTapGestureRecognizer()
         
@@ -63,7 +68,8 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         updateMinMaxDateQuery()
-        updateEntities()
+        submitButtonAction(submitButton)
+        breakOutWords()
     }
     
     func updateMinMaxDateQuery() {
@@ -112,7 +118,7 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
     
     func setUpWordLabels() {
         mostCommonWordLabel = UILabel()
-        mostCommonWordLabel.text = "peanuts"
+        mostCommonWordLabel.text = mostUsedWord
         mostCommonWordLabel.font = .systemFont(ofSize: 32)
         mostCommonWordLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(mostCommonWordLabel)
@@ -126,7 +132,7 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(mostCommonWordDescription)
         
         averageWordLengthLabel = UILabel()
-        averageWordLengthLabel.text = "102.7"
+        averageWordLengthLabel.text = "\(avgWordCount)"
         averageWordLengthLabel.font = .systemFont(ofSize: 32)
         averageWordLengthLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(averageWordLengthLabel)
@@ -159,6 +165,37 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         averageWordLengthLabel.topAnchor.constraint(equalTo: averageWordLengthDescription.bottomAnchor, constant: 0).isActive = true
         
         averageWordLengthDescription.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -16).isActive = true
+    }
+    
+    func breakOutWords() {
+        var string =  entries.reduce("") { $0 + $1.text! + " " }
+        string = string.localizedCapitalized
+        words = []
+        
+        // You need to understand what this is actually doing
+        string.enumerateSubstrings(in: string.startIndex..<string.endIndex, options: .byWords) {
+            (substring, _, _, _) -> () in
+            self.words.append(substring!)
+        }
+        
+        // Better rounding method below
+        avgWordCount = Double(words.count) / Double(entries.count)
+        avgWordCount = round(avgWordCount * 10) / 10
+        
+        let dedupedWords: [String] = words.removeDuplicates()
+        print(dedupedWords)
+        
+        wordCountDict = [:]
+        for i in dedupedWords {
+            wordCountDict[i] = words.filter { $0 == i }.count
+        }
+        
+        // In case of multiple values having the same highest count, the below will return the most recently used one
+        // I think?
+        let optionalMostUsedWord = wordCountDict.max { a, b in a.value < b.value }?.key
+        guard let ourMostUsedWord = optionalMostUsedWord else { return }
+        mostUsedWord = ourMostUsedWord
+        print(mostUsedWord)
     }
     
     func setUpBarChart() {
@@ -312,6 +349,7 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         updateEntities()
         activityChart.clear()
         activityChart.setBarChartData(dataSource: entryTuples, label: "Daily Activity", color: ourBlue)
+        activityChartLabel.text = { setActivityChartLabelText(data: entryTuples) }()
         
         
         let labels = ["Missed", "Completed"]
@@ -326,6 +364,10 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         print(values)
         completionChart.clear()
         completionChart.setPieChartData(labels: labels, values: values, colors: [ourYellow, ourGreen])
+        
+        breakOutWords()
+        averageWordLengthLabel.text = "\(avgWordCount)"
+        mostCommonWordLabel.text = mostUsedWord
         
     }
     
