@@ -15,7 +15,7 @@
 		4B6A356F1F60AF8400AA41A5 /* DailyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A356E1F60AF8400AA41A5 /* DailyUITests.swift */; };
 		4B6A67EC1F7B04B3002F7ACC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B6A67EB1F7B04B3002F7ACC /* Main.storyboard */; };
 		4B6A67EE1F7B068D002F7ACC /* AnalyticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A67ED1F7B068D002F7ACC /* AnalyticsViewController.swift */; };
-		4B6A67F01F7B09A9002F7ACC /* DiaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A67EF1F7B09A9002F7ACC /* DiaryViewController.swift */; };
+		4B6A67F01F7B09A9002F7ACC /* ReaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A67EF1F7B09A9002F7ACC /* ReaderViewController.swift */; };
 		4B7AA1441F7EDDCC00824F98 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7AA1431F7EDDCC00824F98 /* UIViewExtension.swift */; };
 		4BB7BD181F82ECAB00AEB13C /* BarChartViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB7BD171F82ECAB00AEB13C /* BarChartViewExtension.swift */; };
 		4BB81BBD1F8B42F700BD7E20 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4BB81BBB1F8B42F700BD7E20 /* Model.xcdatamodeld */; };
@@ -60,7 +60,7 @@
 		4B6A35701F60AF8400AA41A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B6A67EB1F7B04B3002F7ACC /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		4B6A67ED1F7B068D002F7ACC /* AnalyticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsViewController.swift; sourceTree = "<group>"; };
-		4B6A67EF1F7B09A9002F7ACC /* DiaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryViewController.swift; sourceTree = "<group>"; };
+		4B6A67EF1F7B09A9002F7ACC /* ReaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderViewController.swift; sourceTree = "<group>"; };
 		4B7AA1431F7EDDCC00824F98 /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
 		4BB7BD171F82ECAB00AEB13C /* BarChartViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChartViewExtension.swift; sourceTree = "<group>"; };
 		4BB81BBC1F8B42F700BD7E20 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
@@ -137,13 +137,13 @@
 				4B6A35501F60AF8400AA41A5 /* NewEntryViewController.swift */,
 				4B6A67ED1F7B068D002F7ACC /* AnalyticsViewController.swift */,
 				4BD21E901F7AFDD400BAEC5D /* OurTabBarController.swift */,
+				4B6A67EF1F7B09A9002F7ACC /* ReaderViewController.swift */,
 				4BB81BBB1F8B42F700BD7E20 /* Model.xcdatamodeld */,
 				4BB81BC01F8B47A400BD7E20 /* Entry.swift */,
 				4BE2E6971F84566600939CA2 /* BarChartDisplayType.swift */,
 				4B6A67EB1F7B04B3002F7ACC /* Main.storyboard */,
 				4BB7BD171F82ECAB00AEB13C /* BarChartViewExtension.swift */,
 				4B232AF01F902D7700F4E039 /* PieChartViewExtension.swift */,
-				4B6A67EF1F7B09A9002F7ACC /* DiaryViewController.swift */,
 				4B6A35551F60AF8400AA41A5 /* Assets.xcassets */,
 				4B6A355A1F60AF8400AA41A5 /* Info.plist */,
 				4BB892861F91AA1100D4F25E /* ArrayExtension.swift */,
@@ -496,7 +496,7 @@
 				4BB892871F91AA1100D4F25E /* ArrayExtension.swift in Sources */,
 				4B6A67EE1F7B068D002F7ACC /* AnalyticsViewController.swift in Sources */,
 				4BD21E911F7AFDD400BAEC5D /* OurTabBarController.swift in Sources */,
-				4B6A67F01F7B09A9002F7ACC /* DiaryViewController.swift in Sources */,
+				4B6A67F01F7B09A9002F7ACC /* ReaderViewController.swift in Sources */,
 				4BB81BBD1F8B42F700BD7E20 /* Model.xcdatamodeld in Sources */,
 				4BE2E6981F84566600939CA2 /* BarChartDisplayType.swift in Sources */,
 				4B6A354F1F60AF8400AA41A5 /* AppDelegate.swift in Sources */,

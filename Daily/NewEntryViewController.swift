@@ -156,7 +156,7 @@ class NewEntryViewController: UIViewController, UITextViewDelegate {
         ourTextView.delegate = self
         ourTextView.text = defaultString
         ourTextView.textColor = UIColor.darkGray
-        ourTextView.backgroundColor = UIColor.init(red: 255.0/255.0, green: 255.0/255.0, blue: 255.0/255.0, alpha: 0.8)
+        ourTextView.backgroundColor = UIColor(red: 255.0/255.0, green: 255.0/255.0, blue: 255.0/255.0, alpha: 0.8)
         ourTextView.layer.cornerRadius = 5
         ourTextView.font = .systemFont(ofSize: 16)
         ourTextView.translatesAutoresizingMaskIntoConstraints = false
@@ -187,11 +187,6 @@ class NewEntryViewController: UIViewController, UITextViewDelegate {
         gradient.endPoint = CGPoint.init(x: 1.0, y: 0.25)
         gradient.startPoint = CGPoint.init(x: 0.5, y: 1.0)
         self.view.layer.insertSublayer(gradient, at: 0)
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     func initTapGestureRecognizer() {

@@ -23,12 +23,12 @@ class OurTabBarController: UITabBarController {
         analyticsViewController.title = "Analytics"
         analyticsViewController.tabBarItem.image = UIImage(named: "AnalyticsIcon")
         
-        let diaryViewController = DiaryViewController()
-        diaryViewController.title = "Read"
-        diaryViewController.tabBarItem.image = UIImage(named: "ReadIcon")
+        let readerViewController = ReaderViewController()
+        readerViewController.title = "Read"
+        readerViewController.tabBarItem.image = UIImage(named: "ReadIcon")
         
-        if arc4random_uniform(7) == 0 {
-            viewControllers = [newEntryViewController, analyticsViewController, diaryViewController]
+        if arc4random_uniform(1) == 0 {
+            viewControllers = [newEntryViewController, analyticsViewController, readerViewController]
         } else {
             viewControllers = [newEntryViewController, analyticsViewController]
         }

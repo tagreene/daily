@@ -149,10 +149,10 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         
         if #available(iOS 11, *) {
             mostCommonWordLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
-            averageWordLengthDescription.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24).isActive = true
+            averageWordLengthDescription.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
         } else {
             mostCommonWordLabel.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 16).isActive = true
-            averageWordLengthDescription.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 24).isActive = true
+            averageWordLengthDescription.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 20).isActive = true
         }
         
         mostCommonWordDescription.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 16).isActive = true
@@ -238,7 +238,7 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         // we also get intPercentEmpty, which supplies the pieChartLabel
         var percentEmpty = Double(countEmptyDays) / Double(entryTuples.count)
         let intPercentEmpty = Int(round(percentEmpty * 100))
-        percentEmpty = Double(intPercentEmpty / 100)
+        percentEmpty = Double(intPercentEmpty) / 100
         let values: [Double] = [percentEmpty, 1 - percentEmpty]
         print(values)
         
@@ -291,7 +291,7 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         startDatePicker.datePickerMode = .date
         startDatePicker.minimumDate = firstEntryDate
         startDatePicker.maximumDate = lastEntryDate
-        startDatePicker.setDate(firstEntryDate, animated: false)
+        startDatePicker.setDate(firstEntryDate, animated: true)
         startDate = UITextField()
         startDate.inputView = startDatePicker
         startDate.text = dateFormatter.string(from: firstEntryDate)
@@ -354,16 +354,19 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         
         let labels = ["Missed", "Completed"]
         let countEmptyDays = entryTuples.filter { $0.1 == 0 }.count
+        print("countEmptyDays: \(countEmptyDays)")
         
         // The dance below is to get a nice human readible double rounded out of percentEmpty, which is used in the values command
         // we also get intPercentEmpty, which supplies the pieChartLabel
         var percentEmpty = Double(countEmptyDays) / Double(entryTuples.count)
         let intPercentEmpty = Int(round(percentEmpty * 100))
-        percentEmpty = Double(intPercentEmpty / 100)
+        percentEmpty = Double(intPercentEmpty) / 100
         let values: [Double] = [percentEmpty, 1 - percentEmpty]
         print(values)
+        
         completionChart.clear()
         completionChart.setPieChartData(labels: labels, values: values, colors: [ourYellow, ourGreen])
+        pieChartLabel.text = "\(100 - intPercentEmpty)% completion rate"
         
         breakOutWords()
         averageWordLengthLabel.text = "\(avgWordCount)"
@@ -420,8 +423,14 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yy"
         startDate.text = dateFormatter.string(from: sender.date)
-        endDatePicker.minimumDate = sender.date
         startDateDate = sender.date
+        
+        // Handle Date Oddities
+        if startDateDate > endDateDate {
+            endDate.text = startDate.text
+            endDateDate = startDateDate
+            endDatePicker.setDate(startDateDate, animated: false)
+        }
         print(startDateDate)
     }
     
@@ -429,8 +438,15 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yy"
         endDate.text = dateFormatter.string(from: sender.date)
-        startDatePicker.maximumDate = sender.date
         endDateDate = sender.date
+        
+        
+        // Handle Date Oddities
+        if endDateDate < startDateDate {
+            startDate.text = endDate.text
+            startDateDate = endDateDate
+            startDatePicker.setDate(endDateDate, animated: false)
+        }
         print(endDateDate)
     }
     
