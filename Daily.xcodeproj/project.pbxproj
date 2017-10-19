@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4B232AF11F902D7700F4E039 /* PieChartViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B232AF01F902D7700F4E039 /* PieChartViewExtension.swift */; };
+		4B2C0D9A1F96ECDB0057DC68 /* ReaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2C0D991F96ECDB0057DC68 /* ReaderCell.swift */; };
 		4B6A354F1F60AF8400AA41A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A354E1F60AF8400AA41A5 /* AppDelegate.swift */; };
 		4B6A35511F60AF8400AA41A5 /* NewEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A35501F60AF8400AA41A5 /* NewEntryViewController.swift */; };
 		4B6A35561F60AF8400AA41A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B6A35551F60AF8400AA41A5 /* Assets.xcassets */; };
@@ -47,6 +48,7 @@
 
 /* Begin PBXFileReference section */
 		4B232AF01F902D7700F4E039 /* PieChartViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChartViewExtension.swift; sourceTree = "<group>"; };
+		4B2C0D991F96ECDB0057DC68 /* ReaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderCell.swift; sourceTree = "<group>"; };
 		4B6A354B1F60AF8400AA41A5 /* Daily.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Daily.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B6A354E1F60AF8400AA41A5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4B6A35501F60AF8400AA41A5 /* NewEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewEntryViewController.swift; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 				4B6A67ED1F7B068D002F7ACC /* AnalyticsViewController.swift */,
 				4BD21E901F7AFDD400BAEC5D /* OurTabBarController.swift */,
 				4B6A67EF1F7B09A9002F7ACC /* ReaderViewController.swift */,
+				4B2C0D991F96ECDB0057DC68 /* ReaderCell.swift */,
 				4BB81BBB1F8B42F700BD7E20 /* Model.xcdatamodeld */,
 				4BB81BC01F8B47A400BD7E20 /* Entry.swift */,
 				4BE2E6971F84566600939CA2 /* BarChartDisplayType.swift */,
@@ -502,6 +505,7 @@
 				4B6A354F1F60AF8400AA41A5 /* AppDelegate.swift in Sources */,
 				4B232AF11F902D7700F4E039 /* PieChartViewExtension.swift in Sources */,
 				4B7AA1441F7EDDCC00824F98 /* UIViewExtension.swift in Sources */,
+				4B2C0D9A1F96ECDB0057DC68 /* ReaderCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

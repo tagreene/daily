@@ -10,7 +10,7 @@ import UIKit
 import Charts
 import CoreData
 
-class AnalyticsViewController: UIViewController, UITextFieldDelegate {
+class AnalyticsViewController: UIViewController {
     var completionChart: PieChartView!
     var activityChart: BarChartView!
     var displayType: DisplayType!
@@ -53,7 +53,6 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // set up charts here
-        //        view.backgroundColor = .white
         queryForMinMaxDates()
         setUpDateSelection()
         updateEntities()
@@ -67,6 +66,8 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
         updateMinMaxDateQuery()
         submitButtonAction(submitButton)
         breakOutWords()
@@ -341,9 +342,9 @@ class AnalyticsViewController: UIViewController, UITextFieldDelegate {
         endDate.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: 0).isActive = true
     }
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        self.activeTextField = textField
-    }
+//    func textFieldDidBeginEditing(_ textField: UITextField) {
+//        self.activeTextField = textField
+//    }
     
     @objc func submitButtonAction(_ sender: UIButton) {
         updateEntities()
