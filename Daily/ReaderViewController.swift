@@ -22,6 +22,7 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
     var lastEntryDate: Date!
     var endDate: Date!
     var startDate: Date!
+    var entriesDict = [(date: Date, entries: String)]()
     
     var systemBlue = UIColor(red: 0, green: 0.478431, blue: 1, alpha: 1)
     var ourGreen = UIColor(red: 150/255.0, green: 245.0/255.0, blue: 150/255.0, alpha: 1)
@@ -38,7 +39,7 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yy"
         
-        guard let firstDate = dateFormatter.date(from: startDateString) else { return }
+        guard var firstDate = dateFormatter.date(from: startDateString) else { return }
         guard var lastDate = dateFormatter.date(from: endDateString) else { return }
         
         lastDate = Date(timeInterval: 60 * 60 * 24, since: lastDate)
@@ -60,8 +61,32 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
             
             
             self.entries = ourEntryArray
-            print(entries)
         }
+        
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "HH:mma"
+        timeFormatter.amSymbol = "AM"
+        timeFormatter.pmSymbol = "PM"
+        timeFormatter.locale = Locale(identifier: "en_US_POSIX")
+        entriesDict.removeAll()
+        while firstDate < lastDate {
+            print(firstDate)
+            print(lastDate)
+            let countLastDate = Date(timeInterval: 60 * 60 * 24, since: firstDate)
+            print(countLastDate)
+            let filteredEntries = entries.filter { $0.date! >= firstDate && $0.date! < countLastDate }
+            var daysEntries = String()
+            for i in filteredEntries {
+                guard let entryDate = i.date else { return }
+                let entryTime = timeFormatter.string(from: entryDate)
+                guard let entryText = i.text else { return }
+                
+                daysEntries += "\(entryTime)\n\(entryText)\n\n"
+            }
+            entriesDict.append((date: firstDate, entries: daysEntries))
+            firstDate = Date(timeInterval: 60 * 60 * 24, since: firstDate)
+        }
+        print(entriesDict)
     }
     
     func updateMinMaxDateQuery() {
@@ -124,7 +149,7 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-        queryForMinMaxDates()
+        updateMinMaxDateQuery()
         updateEntities()
     }
     
@@ -266,11 +291,12 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 25
+        return entriesDict.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "readerCell", for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "readerCell", for: indexPath) as! ReaderCell
+        cell.setUp(date: entriesDict[indexPath.row].date, entries: entriesDict[indexPath.row].entries)
         return cell
     }
     

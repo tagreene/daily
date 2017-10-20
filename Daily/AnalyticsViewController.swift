@@ -407,7 +407,7 @@ class AnalyticsViewController: UIViewController {
         self.entryTuples.removeAll()
         while firstDate < lastDate {
             let countLastDate = Date(timeInterval: 60 * 60 * 24, since: firstDate)
-            let filteredEntries = entries.filter { $0.date! >= firstDate && $0.date! < countLastDate}
+            let filteredEntries = entries.filter { $0.date! >= firstDate && $0.date! < countLastDate }
             self.entryTuples.append((date: firstDate, int: filteredEntries.count))
             firstDate = Date(timeInterval: 60 * 60 * 24, since: firstDate)
         }

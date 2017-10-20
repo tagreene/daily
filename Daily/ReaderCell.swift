@@ -24,20 +24,28 @@ class ReaderCell: UICollectionViewCell {
         addConstraints(withVisualFormat: "H:|-8-[v0]-8-|", views: entriesLabel)
     }
     
-    let dateLabel: UILabel = {
+    var dateLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 32)
         label.text = "10/17/17"
         return label
     }()
     
-    let entriesLabel: UILabel = {
+    var entriesLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
         label.text = "4:30PM\nPlease God??\n\n3:02 PM\nI hope this works like I think it will"
         label.numberOfLines = 0
         return label
     }()
+    
+    func setUp(date: Date, entries: String) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/yy"
+        
+        self.dateLabel.text = dateFormatter.string(from: date)
+        self.entriesLabel.text = entries
+    }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
