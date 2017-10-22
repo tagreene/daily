@@ -32,6 +32,7 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
     
     @objc func submitButtonAction(_ sender: UIButton) {
         updateEntities()
+        collectionView.reloadData()
     }
     
     func updateEntities() {
@@ -59,7 +60,6 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
                 return
             }
             
-            
             self.entries = ourEntryArray
         }
         
@@ -83,7 +83,9 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
                 
                 daysEntries += "\(entryTime)\n\(entryText)\n\n"
             }
-            entriesDict.append((date: firstDate, entries: daysEntries))
+            if !daysEntries.isEmpty {
+                entriesDict.append((date: firstDate, entries: daysEntries))
+            }
             firstDate = Date(timeInterval: 60 * 60 * 24, since: firstDate)
         }
         print(entriesDict)
@@ -151,6 +153,7 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
         
         updateMinMaxDateQuery()
         updateEntities()
+        collectionView.reloadData()
     }
     
     @objc func handleStartDatePicker(_ sender: UIDatePicker) {
@@ -211,7 +214,7 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
         startDateButton.font = .systemFont(ofSize: 24)
         startDateButton.textColor = systemBlue
         startDateButton.translatesAutoresizingMaskIntoConstraints = false
-        startDate = Date()
+        startDate = firstEntryDate
         view.addSubview(startDateButton)
         
         endDatePicker = UIDatePicker()
@@ -225,7 +228,7 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
         endDateButton.font = .systemFont(ofSize: 24)
         endDateButton.textColor = systemBlue
         endDateButton.translatesAutoresizingMaskIntoConstraints = false
-        endDate = Date()
+        endDate = lastEntryDate
         view.addSubview(endDateButton)
         
         submitButton = UIButton(type: .system)
@@ -256,6 +259,7 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
     
     func setUpCollectionView() {
         let layout = UICollectionViewFlowLayout()
+        layout.estimatedItemSize = CGSize(width: 1, height: 1)
         collectionView = UICollectionView(frame: containerView.frame, collectionViewLayout: layout)
         collectionView.backgroundColor = UIColor(red: 200/255.0, green: 200/255.0, blue: 200/255.0, alpha: 0.1)
         collectionView.layer.cornerRadius = 5
@@ -296,12 +300,12 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "readerCell", for: indexPath) as! ReaderCell
-        cell.setUp(date: entriesDict[indexPath.row].date, entries: entriesDict[indexPath.row].entries)
+        cell.setUp(date: entriesDict.reversed()[indexPath.row].date, entries: entriesDict.reversed()[indexPath.row].entries)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: containerView.frame.width, height: 200)
+        return CGSize(width: containerView.frame.width, height: 100)
     }
     
     func addGradient() {
