@@ -13,7 +13,6 @@ import CoreData
 class AnalyticsViewController: UIViewController {
     var completionChart: PieChartView!
     var activityChart: BarChartView!
-    var displayType: DisplayType!
     var startDate: UITextField!
     var endDate: UITextField!
     var submitButton: UIButton!
@@ -75,10 +74,10 @@ class AnalyticsViewController: UIViewController {
     
     func updateMinMaxDateQuery() {
         queryForMinMaxDates()
-        startDatePicker.minimumDate = firstEntryDate
-        startDatePicker.maximumDate = lastEntryDate
-        endDatePicker.minimumDate = firstEntryDate
-        endDatePicker.maximumDate = lastEntryDate
+//        startDatePicker.minimumDate = firstEntryDate
+//        startDatePicker.maximumDate = lastEntryDate
+//        endDatePicker.minimumDate = firstEntryDate
+//        endDatePicker.maximumDate = lastEntryDate
     }
     
     func queryForMinMaxDates() {
@@ -184,7 +183,6 @@ class AnalyticsViewController: UIViewController {
         avgWordCount = round(avgWordCount * 10) / 10
         
         let dedupedWords: [String] = words.removeDuplicates()
-        print(dedupedWords)
         
         wordCountDict = [:]
         for i in dedupedWords {
@@ -196,7 +194,6 @@ class AnalyticsViewController: UIViewController {
         let optionalMostUsedWord = wordCountDict.max { a, b in a.value < b.value }?.key
         guard let ourMostUsedWord = optionalMostUsedWord else { return }
         mostUsedWord = ourMostUsedWord
-        print(mostUsedWord)
     }
     
     func setUpBarChart() {
@@ -241,7 +238,6 @@ class AnalyticsViewController: UIViewController {
         let intPercentEmpty = Int(round(percentEmpty * 100))
         percentEmpty = Double(intPercentEmpty) / 100
         let values: [Double] = [percentEmpty, 1 - percentEmpty]
-        print(values)
         
         
         completionChart = PieChartView()
@@ -287,19 +283,20 @@ class AnalyticsViewController: UIViewController {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yy"
         
+        startDateDate = Date(timeInterval: -60 * 60 * 24 * 6, since: lastEntryDate)
+        
         startDatePicker = UIDatePicker()
         startDatePicker.addTarget(self, action: #selector(handleStartDatePicker(_:)), for: .valueChanged)
         startDatePicker.datePickerMode = .date
-        startDatePicker.minimumDate = firstEntryDate
+//        startDatePicker.minimumDate = firstEntryDate
         startDatePicker.maximumDate = lastEntryDate
-        startDatePicker.setDate(firstEntryDate, animated: true)
+        startDatePicker.setDate(startDateDate, animated: true)
         startDate = UITextField()
         startDate.inputView = startDatePicker
-        startDate.text = dateFormatter.string(from: firstEntryDate)
+        startDate.text = dateFormatter.string(from: startDateDate)
         startDate.font = .systemFont(ofSize: 24)
         startDate.textColor = systemBlue
         startDate.translatesAutoresizingMaskIntoConstraints = false
-        startDateDate = Date()
         view.addSubview(startDate)
         
         endDatePicker = UIDatePicker()
@@ -313,7 +310,7 @@ class AnalyticsViewController: UIViewController {
         endDate.font = .systemFont(ofSize: 24)
         endDate.textColor = systemBlue
         endDate.translatesAutoresizingMaskIntoConstraints = false
-        endDateDate = Date()
+        endDateDate = lastEntryDate
         view.addSubview(endDate)
         
         submitButton = UIButton(type: .system)
@@ -355,7 +352,6 @@ class AnalyticsViewController: UIViewController {
         
         let labels = ["Missed", "Completed"]
         let countEmptyDays = entryTuples.filter { $0.1 == 0 }.count
-        print("countEmptyDays: \(countEmptyDays)")
         
         // The dance below is to get a nice human readible double rounded out of percentEmpty, which is used in the values command
         // we also get intPercentEmpty, which supplies the pieChartLabel
@@ -363,7 +359,6 @@ class AnalyticsViewController: UIViewController {
         let intPercentEmpty = Int(round(percentEmpty * 100))
         percentEmpty = Double(intPercentEmpty) / 100
         let values: [Double] = [percentEmpty, 1 - percentEmpty]
-        print(values)
         
         completionChart.clear()
         completionChart.setPieChartData(labels: labels, values: values, colors: [ourYellow, ourGreen])
@@ -411,7 +406,7 @@ class AnalyticsViewController: UIViewController {
             self.entryTuples.append((date: firstDate, int: filteredEntries.count))
             firstDate = Date(timeInterval: 60 * 60 * 24, since: firstDate)
         }
-        print(entryTuples)
+        print("E N T R Y  T U P L E S \n \(entryTuples) \n _______________________ \n")
     }
     
     func initTapGestureRecognizer() {
@@ -432,7 +427,6 @@ class AnalyticsViewController: UIViewController {
             endDateDate = startDateDate
             endDatePicker.setDate(startDateDate, animated: false)
         }
-        print(startDateDate)
     }
     
     @objc func handleEndDatePicker(_ sender: UIDatePicker) {
@@ -448,7 +442,6 @@ class AnalyticsViewController: UIViewController {
             startDateDate = endDateDate
             startDatePicker.setDate(endDateDate, animated: false)
         }
-        print(endDateDate)
     }
     
     @objc func dismissKeyboard(_ sender: UITapGestureRecognizer) {

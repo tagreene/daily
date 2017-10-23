@@ -23,7 +23,6 @@
 		4BB81BC11F8B47A400BD7E20 /* Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB81BC01F8B47A400BD7E20 /* Entry.swift */; };
 		4BB892871F91AA1100D4F25E /* ArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB892861F91AA1100D4F25E /* ArrayExtension.swift */; };
 		4BD21E911F7AFDD400BAEC5D /* OurTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD21E901F7AFDD400BAEC5D /* OurTabBarController.swift */; };
-		4BE2E6981F84566600939CA2 /* BarChartDisplayType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE2E6971F84566600939CA2 /* BarChartDisplayType.swift */; };
 		AE20309F5F3C6F2BB5ACC1E6 /* Pods_DailyUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C269F790B0FC664ADB30C0D0 /* Pods_DailyUITests.framework */; };
 		AE282F608D5DBDC792E1A4C4 /* Pods_DailyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F22D2C01E3BDBBF2954983D /* Pods_DailyTests.framework */; };
 		CA16164DECCC3B70BA068D9F /* Pods_Daily.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 948FA05525338AB744AA7CDA /* Pods_Daily.framework */; };
@@ -69,7 +68,6 @@
 		4BB81BC01F8B47A400BD7E20 /* Entry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entry.swift; sourceTree = "<group>"; };
 		4BB892861F91AA1100D4F25E /* ArrayExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayExtension.swift; sourceTree = "<group>"; };
 		4BD21E901F7AFDD400BAEC5D /* OurTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OurTabBarController.swift; sourceTree = "<group>"; };
-		4BE2E6971F84566600939CA2 /* BarChartDisplayType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChartDisplayType.swift; sourceTree = "<group>"; };
 		5054BA417895FCBB91D6BC77 /* Pods-DailyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DailyTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DailyTests/Pods-DailyTests.debug.xcconfig"; sourceTree = "<group>"; };
 		6EFC478F62A8A4D5A956DABA /* Pods-DailyUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DailyUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DailyUITests/Pods-DailyUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		7D129BA7F5E1DCACBB60669E /* Pods-Daily.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Daily.release.xcconfig"; path = "Pods/Target Support Files/Pods-Daily/Pods-Daily.release.xcconfig"; sourceTree = "<group>"; };
@@ -143,7 +141,6 @@
 				4B2C0D991F96ECDB0057DC68 /* ReaderCell.swift */,
 				4BB81BBB1F8B42F700BD7E20 /* Model.xcdatamodeld */,
 				4BB81BC01F8B47A400BD7E20 /* Entry.swift */,
-				4BE2E6971F84566600939CA2 /* BarChartDisplayType.swift */,
 				4B6A67EB1F7B04B3002F7ACC /* Main.storyboard */,
 				4BB7BD171F82ECAB00AEB13C /* BarChartViewExtension.swift */,
 				4B232AF01F902D7700F4E039 /* PieChartViewExtension.swift */,
@@ -501,7 +498,6 @@
 				4BD21E911F7AFDD400BAEC5D /* OurTabBarController.swift in Sources */,
 				4B6A67F01F7B09A9002F7ACC /* ReaderViewController.swift in Sources */,
 				4BB81BBD1F8B42F700BD7E20 /* Model.xcdatamodeld in Sources */,
-				4BE2E6981F84566600939CA2 /* BarChartDisplayType.swift in Sources */,
 				4B6A354F1F60AF8400AA41A5 /* AppDelegate.swift in Sources */,
 				4B232AF11F902D7700F4E039 /* PieChartViewExtension.swift in Sources */,
 				4B7AA1441F7EDDCC00824F98 /* UIViewExtension.swift in Sources */,

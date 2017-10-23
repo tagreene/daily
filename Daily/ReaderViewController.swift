@@ -64,9 +64,9 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
         }
         
         let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "HH:mma"
-        timeFormatter.amSymbol = "AM"
-        timeFormatter.pmSymbol = "PM"
+        timeFormatter.dateFormat = "h:mm a"
+        timeFormatter.amSymbol = "am"
+        timeFormatter.pmSymbol = "pm"
         timeFormatter.locale = Locale(identifier: "en_US_POSIX")
         entriesDict.removeAll()
         while firstDate < lastDate {
@@ -202,19 +202,21 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yy"
         
+        startDate = Date(timeInterval: -60 * 60 * 24 * 6, since: lastEntryDate)
+        print("Start Date: \(startDate)")
+        
         startDatePicker = UIDatePicker()
         startDatePicker.addTarget(self, action: #selector(handleStartDatePicker(_:)), for: .valueChanged)
         startDatePicker.datePickerMode = .date
         startDatePicker.minimumDate = firstEntryDate
         startDatePicker.maximumDate = lastEntryDate
-        startDatePicker.setDate(firstEntryDate, animated: true)
+        startDatePicker.setDate(startDate, animated: true)
         startDateButton = UITextField()
         startDateButton.inputView = startDatePicker
-        startDateButton.text = dateFormatter.string(from: firstEntryDate)
+        startDateButton.text = dateFormatter.string(from: startDate)
         startDateButton.font = .systemFont(ofSize: 24)
         startDateButton.textColor = systemBlue
         startDateButton.translatesAutoresizingMaskIntoConstraints = false
-        startDate = firstEntryDate
         view.addSubview(startDateButton)
         
         endDatePicker = UIDatePicker()
