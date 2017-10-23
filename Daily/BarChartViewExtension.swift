@@ -176,19 +176,6 @@ extension BarChartView {
         }
         
         
-        // This is particularly gross - refactor using a dateFormatter
-//        // You'll want to fix this too, to accurately give a label
-//        for i in 0..<dataSource.count {
-//            let date = dataSource[i].0
-//            let calendar = Calendar.current
-//
-//            let month = calendar.component(.month, from: date)
-//            let day = calendar.component(.day, from: date)
-//
-//
-//            days.append("\(month)/\(day)")
-//        }
-        
         print(days)
         
         let chartDataSet = BarChartDataSet(values: dataEntries, label: label)

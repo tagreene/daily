@@ -74,10 +74,10 @@ class AnalyticsViewController: UIViewController {
     
     func updateMinMaxDateQuery() {
         queryForMinMaxDates()
-//        startDatePicker.minimumDate = firstEntryDate
-//        startDatePicker.maximumDate = lastEntryDate
-//        endDatePicker.minimumDate = firstEntryDate
-//        endDatePicker.maximumDate = lastEntryDate
+        startDatePicker.minimumDate = firstEntryDate
+        startDatePicker.maximumDate = lastEntryDate
+        endDatePicker.minimumDate = firstEntryDate
+        endDatePicker.maximumDate = lastEntryDate
     }
     
     func queryForMinMaxDates() {
@@ -288,7 +288,7 @@ class AnalyticsViewController: UIViewController {
         startDatePicker = UIDatePicker()
         startDatePicker.addTarget(self, action: #selector(handleStartDatePicker(_:)), for: .valueChanged)
         startDatePicker.datePickerMode = .date
-//        startDatePicker.minimumDate = firstEntryDate
+        startDatePicker.minimumDate = firstEntryDate
         startDatePicker.maximumDate = lastEntryDate
         startDatePicker.setDate(startDateDate, animated: true)
         startDate = UITextField()
@@ -339,9 +339,6 @@ class AnalyticsViewController: UIViewController {
         endDate.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: 0).isActive = true
     }
     
-//    func textFieldDidBeginEditing(_ textField: UITextField) {
-//        self.activeTextField = textField
-//    }
     
     @objc func submitButtonAction(_ sender: UIButton) {
         updateEntities()
