@@ -46,7 +46,7 @@ class NewEntryViewController: UIViewController, UITextViewDelegate {
     }
     
     @objc func createEntry(_ sender: UIButton) {
-        if let entryString = ourTextView.text, entryString != defaultString, entryString != confirmationString {
+        if let entryString = ourTextView.text, entryString != defaultString, entryString != confirmationString, entryString != "" {
             
             let context = AppDelegate.viewContext
             context.perform {

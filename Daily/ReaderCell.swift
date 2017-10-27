@@ -12,23 +12,23 @@ class ReaderCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         setUpViews()
     }
     
     func setUpViews() {
         addSubview(dateLabel)
         addSubview(entriesLabel)
-        addConstraints(withVisualFormat: "V:|-8-[v0]-8-[v1]|", views: dateLabel, entriesLabel)
-        
-        dateLabel.widthAnchor.constraint(equalToConstant: frame.width).isActive = true
-        
-        entriesLabel.widthAnchor.constraint(equalToConstant: frame.width).isActive = true
+        addConstraints(withVisualFormat: "V:|-8-[v0][v1]-8-|", views: dateLabel, entriesLabel)
+        addConstraints(withVisualFormat: "H:|-8-[v0]-8-|", views: dateLabel)
+        addConstraints(withVisualFormat: "H:|-8-[v0]-8-|", views: entriesLabel)
+        dateLabel.widthAnchor.constraint(equalToConstant: frame.width - 16).isActive = true
+        entriesLabel.widthAnchor.constraint(equalToConstant: frame.width - 16).isActive = true
     }
     
     var dateLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 32)
+        label.font = .systemFont(ofSize: 24)
+        label.textAlignment = .right
         label.text = "10/17/17"
         return label
     }()
@@ -47,6 +47,7 @@ class ReaderCell: UICollectionViewCell {
         
         self.dateLabel.text = dateFormatter.string(from: date)
         self.entriesLabel.text = entries
+        print(entries)
     }
     
     required init?(coder aDecoder: NSCoder) {

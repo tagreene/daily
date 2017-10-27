@@ -64,9 +64,22 @@ class AnalyticsViewController: UIViewController {
         addGradient()
     }
     
+    func setUpNoEntryView() {
+        let noEntryLabel = UILabel()
+        noEntryLabel.text = "You haven't submitted an entry yet! \n\nWhat do you expect to see???"
+        noEntryLabel.font = .systemFont(ofSize: 56)
+        noEntryLabel.textColor = .white
+        noEntryLabel.numberOfLines = 0
+        noEntryLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(noEntryLabel)
+        
+        noEntryLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 8).isActive = true
+        noEntryLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -8).isActive = true
+        noEntryLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        
         updateMinMaxDateQuery()
         submitButtonAction(submitButton)
         breakOutWords()
@@ -74,6 +87,7 @@ class AnalyticsViewController: UIViewController {
     
     func updateMinMaxDateQuery() {
         queryForMinMaxDates()
+        guard lastEntryDate != nil else { return }
         startDatePicker.minimumDate = firstEntryDate
         startDatePicker.maximumDate = lastEntryDate
         endDatePicker.minimumDate = firstEntryDate
@@ -99,7 +113,7 @@ class AnalyticsViewController: UIViewController {
             let request: NSFetchRequest<Entry> = Entry.fetchRequest()
             request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
             request.fetchLimit = 1
-            if let entries = try? context.fetch(request) {
+            if let entries = try? context.fetch(request), entries != [] {
                 self.firstEntryDate = entries[0].date
                 print(self.firstEntryDate)
             }
@@ -109,7 +123,7 @@ class AnalyticsViewController: UIViewController {
             let request: NSFetchRequest<Entry> = Entry.fetchRequest()
             request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
             request.fetchLimit = 1
-            if let entries = try? context.fetch(request) {
+            if let entries = try? context.fetch(request), entries != [] {
                 self.lastEntryDate = entries[0].date
                 print(self.lastEntryDate)
             }
@@ -118,7 +132,9 @@ class AnalyticsViewController: UIViewController {
     
     func setUpWordLabels() {
         mostCommonWordLabel = UILabel()
+        print("most used word \(mostUsedWord), \(mostUsedWord.isEmpty)")
         mostCommonWordLabel.text = mostUsedWord
+        
         mostCommonWordLabel.font = .systemFont(ofSize: 32)
         mostCommonWordLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(mostCommonWordLabel)
@@ -168,9 +184,11 @@ class AnalyticsViewController: UIViewController {
     }
     
     func breakOutWords() {
-        var string =  entries.reduce("") { $0 + $1.text! + " " }
+        var string = entries.reduce("") { $0 + $1.text! + " " }
         string = string.localizedCapitalized
         words = []
+        
+        print("does this print???")
         
         // You need to understand what this is actually doing
         string.enumerateSubstrings(in: string.startIndex..<string.endIndex, options: .byWords) {
@@ -181,6 +199,9 @@ class AnalyticsViewController: UIViewController {
         // Better rounding method below
         avgWordCount = Double(words.count) / Double(entries.count)
         avgWordCount = round(avgWordCount * 10) / 10
+        if avgWordCount.isNaN {
+            avgWordCount = 0
+        }
         
         let dedupedWords: [String] = words.removeDuplicates()
         
@@ -189,10 +210,13 @@ class AnalyticsViewController: UIViewController {
             wordCountDict[i] = words.filter { $0 == i }.count
         }
         
-        // In case of multiple values having the same highest count, the below will return the most recently used one
+        // In case of multiple zvalues having the same highest count, the below will return the most recently used one
         // I think?
         let optionalMostUsedWord = wordCountDict.max { a, b in a.value < b.value }?.key
-        guard let ourMostUsedWord = optionalMostUsedWord else { return }
+        guard let ourMostUsedWord = optionalMostUsedWord else {
+            mostUsedWord = "No Data🤷🏻‍♀️"
+            return
+        }
         mostUsedWord = ourMostUsedWord
     }
     
@@ -280,16 +304,28 @@ class AnalyticsViewController: UIViewController {
     }
     
     func setUpDateSelection() {
+        print(firstEntryDate)
+        print(lastEntryDate)
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yy"
-        
-        startDateDate = Date(timeInterval: -60 * 60 * 24 * 6, since: lastEntryDate)
+        if lastEntryDate != nil {
+            startDateDate = Date(timeInterval: -60 * 60 * 24 * 6, since: lastEntryDate)
+            endDateDate = lastEntryDate
+        } else {
+            startDateDate = Date()
+            endDateDate = Date()
+        }
         
         startDatePicker = UIDatePicker()
         startDatePicker.addTarget(self, action: #selector(handleStartDatePicker(_:)), for: .valueChanged)
         startDatePicker.datePickerMode = .date
-        startDatePicker.minimumDate = firstEntryDate
-        startDatePicker.maximumDate = lastEntryDate
+        if lastEntryDate != nil {
+            startDatePicker.minimumDate = firstEntryDate
+            startDatePicker.maximumDate = lastEntryDate
+        } else {
+            startDatePicker.minimumDate = Date()
+            startDatePicker.maximumDate = Date()
+        }
         startDatePicker.setDate(startDateDate, animated: true)
         startDate = UITextField()
         startDate.inputView = startDatePicker
@@ -302,15 +338,19 @@ class AnalyticsViewController: UIViewController {
         endDatePicker = UIDatePicker()
         endDatePicker.addTarget(self, action: #selector(handleEndDatePicker(_:)), for: .valueChanged)
         endDatePicker.datePickerMode = .date
-        endDatePicker.minimumDate = firstEntryDate
-        endDatePicker.maximumDate = lastEntryDate
+        if lastEntryDate != nil {
+            endDatePicker.minimumDate = firstEntryDate
+            endDatePicker.maximumDate = lastEntryDate
+        } else {
+            endDatePicker.minimumDate = Date()
+            endDatePicker.maximumDate = Date()
+        }
         endDate = UITextField()
         endDate.inputView = endDatePicker
-        endDate.text = dateFormatter.string(from: lastEntryDate)
+        endDate.text = dateFormatter.string(from: endDateDate)
         endDate.font = .systemFont(ofSize: 24)
         endDate.textColor = systemBlue
         endDate.translatesAutoresizingMaskIntoConstraints = false
-        endDateDate = lastEntryDate
         view.addSubview(endDate)
         
         submitButton = UIButton(type: .system)
@@ -336,7 +376,7 @@ class AnalyticsViewController: UIViewController {
         startDate.bottomAnchor.constraint(equalTo: submitButton.topAnchor, constant: -16).isActive = true
         
         endDate.centerYAnchor.constraint(equalTo: startDate.centerYAnchor).isActive = true
-        endDate.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: 0).isActive = true
+        endDate.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -16).isActive = true
     }
     
     
@@ -419,6 +459,8 @@ class AnalyticsViewController: UIViewController {
         startDateDate = sender.date
         
         // Handle Date Oddities
+        print("Start: \(startDateDate)")
+        print("End: \(endDateDate)")
         if startDateDate > endDateDate {
             endDate.text = startDate.text
             endDateDate = startDateDate

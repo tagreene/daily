@@ -83,6 +83,7 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
                 
                 daysEntries += "\(entryTime)\n\(entryText)\n\n"
             }
+            daysEntries = String(daysEntries.dropLast(2)) // Kill the two hanging carriage returns - \n is treated as one character
             if !daysEntries.isEmpty {
                 entriesDict.append((date: firstDate, entries: daysEntries))
             }
@@ -93,6 +94,7 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
     
     func updateMinMaxDateQuery() {
         queryForMinMaxDates()
+        guard lastEntryDate != nil else { return }
         startDatePicker.minimumDate = firstEntryDate
         startDatePicker.maximumDate = lastEntryDate
         endDatePicker.minimumDate = firstEntryDate
@@ -118,7 +120,7 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
             let request: NSFetchRequest<Entry> = Entry.fetchRequest()
             request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
             request.fetchLimit = 1
-            if let entries = try? context.fetch(request) {
+            if let entries = try? context.fetch(request), entries != [] {
                 self.firstEntryDate = entries[0].date
                 print(self.firstEntryDate)
             }
@@ -128,7 +130,7 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
             let request: NSFetchRequest<Entry> = Entry.fetchRequest()
             request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
             request.fetchLimit = 1
-            if let entries = try? context.fetch(request) {
+            if let entries = try? context.fetch(request), entries != [] {
                 self.lastEntryDate = entries[0].date
                 print(self.lastEntryDate)
             }
@@ -202,14 +204,24 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yy"
         
-        startDate = Date(timeInterval: -60 * 60 * 24 * 6, since: lastEntryDate)
-        print("Start Date: \(startDate)")
+        if lastEntryDate != nil {
+            startDate = Date(timeInterval: -60 * 60 * 24 * 6, since: lastEntryDate)
+            endDate = lastEntryDate
+        } else {
+            startDate = Date()
+            endDate = Date()
+        }
         
         startDatePicker = UIDatePicker()
         startDatePicker.addTarget(self, action: #selector(handleStartDatePicker(_:)), for: .valueChanged)
         startDatePicker.datePickerMode = .date
-        startDatePicker.minimumDate = firstEntryDate
-        startDatePicker.maximumDate = lastEntryDate
+        if lastEntryDate != nil {
+            startDatePicker.minimumDate = firstEntryDate
+            startDatePicker.maximumDate = lastEntryDate
+        } else {
+            startDatePicker.minimumDate = Date()
+            startDatePicker.maximumDate = Date()
+        }
         startDatePicker.setDate(startDate, animated: true)
         startDateButton = UITextField()
         startDateButton.inputView = startDatePicker
@@ -222,15 +234,19 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
         endDatePicker = UIDatePicker()
         endDatePicker.addTarget(self, action: #selector(handleEndDatePicker(_:)), for: .valueChanged)
         endDatePicker.datePickerMode = .date
-        endDatePicker.minimumDate = firstEntryDate
-        endDatePicker.maximumDate = lastEntryDate
+        if lastEntryDate != nil {
+            endDatePicker.minimumDate = firstEntryDate
+            endDatePicker.maximumDate = lastEntryDate
+        } else {
+            endDatePicker.minimumDate = Date()
+            endDatePicker.maximumDate = Date()
+        }
         endDateButton = UITextField()
         endDateButton.inputView = endDatePicker
-        endDateButton.text = dateFormatter.string(from: lastEntryDate)
+        endDateButton.text = dateFormatter.string(from: endDate)
         endDateButton.font = .systemFont(ofSize: 24)
         endDateButton.textColor = systemBlue
         endDateButton.translatesAutoresizingMaskIntoConstraints = false
-        endDate = lastEntryDate
         view.addSubview(endDateButton)
         
         submitButton = UIButton(type: .system)
@@ -256,15 +272,16 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
         startDateButton.bottomAnchor.constraint(equalTo: submitButton.topAnchor, constant: -16).isActive = true
         
         endDateButton.centerYAnchor.constraint(equalTo: startDateButton.centerYAnchor).isActive = true
-        endDateButton.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: 0).isActive = true
+        endDateButton.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -16).isActive = true
     }
     
     func setUpCollectionView() {
         let layout = UICollectionViewFlowLayout()
         layout.estimatedItemSize = CGSize(width: 1, height: 1)
+        layout.minimumLineSpacing = 0
         collectionView = UICollectionView(frame: containerView.frame, collectionViewLayout: layout)
-        collectionView.backgroundColor = UIColor(red: 200/255.0, green: 200/255.0, blue: 200/255.0, alpha: 0.1)
-        collectionView.layer.cornerRadius = 5
+        collectionView.backgroundColor = .white
+        collectionView.layer.cornerRadius = 10
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -290,7 +307,7 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
         containerView.bottomAnchor.constraint(equalTo: startDateButton.topAnchor, constant: -8).isActive = true
         
         if #available(iOS 11, *) {
-            containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+            containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
         } else {
             containerView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 8).isActive = true
         }
@@ -302,20 +319,20 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "readerCell", for: indexPath) as! ReaderCell
-        cell.setUp(date: entriesDict.reversed()[indexPath.row].date, entries: entriesDict.reversed()[indexPath.row].entries)
+        cell.setUp(date: entriesDict.reversed()[indexPath.item].date, entries: entriesDict.reversed()[indexPath.item].entries)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: containerView.frame.width, height: 100)
+        return CGSize(width: containerView.frame.width, height: 10)
     }
     
     func addGradient() {
         let gradient: CAGradientLayer = CAGradientLayer()
         gradient.frame.size = self.view.frame.size
-        gradient.colors = [UIColor.init(red: 255.0/255.0, green: 250.0/255.0, blue: 215.0/255.0, alpha: 1.0).cgColor, UIColor.init(red: 255.0/255.0, green: 250.0/255.0, blue: 215.0/255.0, alpha: 0.5).cgColor]
-        gradient.endPoint = CGPoint.init(x: 1.0, y: 0.25)
-        gradient.startPoint = CGPoint.init(x: 0.5, y: 1.0)
+        gradient.colors = [UIColor.init(red: 255/255.0, green: 250/255.0, blue: 215/255.0, alpha: 1.0).cgColor, UIColor.init(red: 255/255.0, green: 250/255.0, blue: 215/255.0, alpha: 0.9).cgColor]
+        gradient.endPoint = CGPoint.init(x: 0.5, y: 0.5)
+        gradient.startPoint = CGPoint.init(x: 0.5, y: 0.0)
         self.view.layer.insertSublayer(gradient, at: 0)
     }
 }
