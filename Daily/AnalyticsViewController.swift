@@ -347,7 +347,7 @@ class AnalyticsViewController: UIViewController {
         startDate.inputView = startDatePicker
         startDate.text = dateFormatter.string(from: startDateDate)
         startDate.font = .systemFont(ofSize: 24)
-        startDate.backgroundColor = UIColor(red: 226/255, green: 242/255, blue: 160/255, alpha: 1)
+        startDate.backgroundColor = ourYellow
         startDate.textAlignment = .center
         startDate.textColor = systemBlue
         startDate.translatesAutoresizingMaskIntoConstraints = false
@@ -367,7 +367,7 @@ class AnalyticsViewController: UIViewController {
         endDate.inputView = endDatePicker
         endDate.text = dateFormatter.string(from: endDateDate)
         endDate.font = .systemFont(ofSize: 24)
-        endDate.backgroundColor = UIColor(red: 226/255, green: 252/255, blue: 170/255, alpha: 1)
+        endDate.backgroundColor = ourYellow
         endDate.textAlignment = .center
         endDate.textColor = systemBlue
         endDate.translatesAutoresizingMaskIntoConstraints = false
@@ -394,12 +394,12 @@ class AnalyticsViewController: UIViewController {
         startDate.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         startDate.bottomAnchor.constraint(equalTo: submitButton.topAnchor).isActive = true
         startDate.heightAnchor.constraint(equalToConstant: screenHeight * 0.063).isActive = true
-        startDate.widthAnchor.constraint(equalToConstant: screenWidth * 0.5).isActive = true
+        startDate.widthAnchor.constraint(equalToConstant: screenWidth * 0.498).isActive = true
         
         endDate.centerYAnchor.constraint(equalTo: startDate.centerYAnchor).isActive = true
         endDate.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         endDate.heightAnchor.constraint(equalToConstant: screenHeight * 0.063).isActive = true
-        endDate.widthAnchor.constraint(equalToConstant: screenWidth * 0.5).isActive = true
+        endDate.widthAnchor.constraint(equalToConstant: screenWidth * 0.498).isActive = true
     }
     
     

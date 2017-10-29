@@ -234,7 +234,7 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
         startDateButton = UITextField()
         startDateButton.inputView = startDatePicker
         startDateButton.text = dateFormatter.string(from: startDate)
-        startDateButton.backgroundColor = UIColor(red: 226/255, green: 242/255, blue: 160/255, alpha: 1)
+        startDateButton.backgroundColor = ourYellow2
         startDateButton.textAlignment = .center
         startDateButton.font = .systemFont(ofSize: 24)
         startDateButton.textColor = systemBlue
@@ -254,7 +254,7 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
         endDateButton = UITextField()
         endDateButton.inputView = endDatePicker
         endDateButton.text = dateFormatter.string(from: endDate)
-        endDateButton.backgroundColor = UIColor(red: 226/255, green: 252/255, blue: 170/255, alpha: 1)
+        endDateButton.backgroundColor = ourYellow2
         endDateButton.textAlignment = .center
         endDateButton.font = .systemFont(ofSize: 24)
         endDateButton.textColor = systemBlue
@@ -281,13 +281,13 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
         startDateButton.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         startDateButton.bottomAnchor.constraint(equalTo: submitButton.topAnchor).isActive = true
         startDateButton.heightAnchor.constraint(equalToConstant: screenHeight * 0.063).isActive = true
-        startDateButton.widthAnchor.constraint(equalToConstant: screenWidth * 0.5).isActive = true
+        startDateButton.widthAnchor.constraint(equalToConstant: screenWidth * 0.498).isActive = true
         
         
         endDateButton.centerYAnchor.constraint(equalTo: startDateButton.centerYAnchor).isActive = true
         endDateButton.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         endDateButton.heightAnchor.constraint(equalToConstant: screenHeight * 0.063).isActive = true
-        endDateButton.widthAnchor.constraint(equalToConstant: screenWidth * 0.5).isActive = true
+        endDateButton.widthAnchor.constraint(equalToConstant: screenWidth * 0.498).isActive = true
     }
     
     func setUpCollectionView() {
