@@ -36,11 +36,13 @@ class AnalyticsViewController: UIViewController {
     var wordCountDict = [String : Int]()
     var mostUsedWord = String()
     
-    var ourGreen = UIColor.init(red: 95.0/255.0, green: 255.0/255.0, blue: 88.0/255.0, alpha: 0.8)
-    var ourYellow = UIColor.init(red: 255.0/255.0, green: 255.0/255.0, blue: 89.0/255.0, alpha: 0.9)
-    var ourBlue = UIColor.init(red: 0.0/255.0, green: 173.0/255.0, blue: 217.0/255.0, alpha: 1.0)
-    var ourSalmon = UIColor.init(red: 240.0/255.0, green: 113.0/255.0, blue: 122.0/255.0, alpha: 1.0)
+    var ourGreen = UIColor(red: 150/255.0, green: 245.0/255.0, blue: 150/255.0, alpha: 1)
+    var chartGreen = UIColor(red: 95.0/255.0, green: 255.0/255.0, blue: 88.0/255.0, alpha: 0.8)
+    var ourYellow = UIColor(red: 255.0/255.0, green: 255.0/255.0, blue: 89.0/255.0, alpha: 0.9)
+    var ourBlue = UIColor(red: 0.0/255.0, green: 173.0/255.0, blue: 217.0/255.0, alpha: 1.0)
+    var ourSalmon = UIColor(red: 217.0/255.0, green: 133/255.0, blue: 137/255.0, alpha: 1)
     var systemBlue = UIColor(red: 0, green: 0.478431, blue: 1, alpha: 1)
+    
     
     let pieChartDataLabels = ["Missed", "Completed"]
     let pieChartCompletionData = [0.36, 0.64]
@@ -132,7 +134,7 @@ class AnalyticsViewController: UIViewController {
     
     func setUpWordLabels() {
         mostCommonWordLabel = UILabel()
-        print("most used word \(mostUsedWord), \(mostUsedWord.isEmpty)")
+        print("Most used word \(mostUsedWord), \(mostUsedWord.isEmpty)")
         mostCommonWordLabel.text = mostUsedWord
         
         mostCommonWordLabel.font = .systemFont(ofSize: 32)
@@ -176,6 +178,7 @@ class AnalyticsViewController: UIViewController {
         mostCommonWordDescription.topAnchor.constraint(equalTo: mostCommonWordLabel.bottomAnchor, constant: 0).isActive = true
         
         mostCommonWordLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 16).isActive = true
+        mostCommonWordLabel.widthAnchor.constraint(equalToConstant: screenWidth * 0.4).isActive = true
         
         averageWordLengthLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -16).isActive = true
         averageWordLengthLabel.topAnchor.constraint(equalTo: averageWordLengthDescription.bottomAnchor, constant: 0).isActive = true
@@ -203,7 +206,9 @@ class AnalyticsViewController: UIViewController {
             avgWordCount = 0
         }
         
-        let dedupedWords: [String] = words.removeDuplicates()
+        var dedupedWords: [String] = words.removeDuplicates()
+        let stopWords = StopWords().englishWordList.map { $0.localizedCapitalized }
+        dedupedWords = dedupedWords.filter { !stopWords.contains($0) }
         
         wordCountDict = [:]
         for i in dedupedWords {
@@ -248,7 +253,7 @@ class AnalyticsViewController: UIViewController {
         let totalSum = Double(data.reduce(0) { $0 + $1.1 })
         let average = totalSum / totalEntries
         let string = String(format: "%.1f", average)
-        return "Average \(string) entries per day"
+        return "average \(string) entries per day"
     }
     
     func setUpPieChart() {
@@ -265,7 +270,7 @@ class AnalyticsViewController: UIViewController {
         
         
         completionChart = PieChartView()
-        completionChart.setPieChartData(labels: labels, values: values, colors: [ourYellow, ourGreen])
+        completionChart.setPieChartData(labels: labels, values: values, colors: [ourYellow, chartGreen])
         completionChart.setPieChartFormatting()
         completionChart.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(completionChart)
@@ -279,19 +284,27 @@ class AnalyticsViewController: UIViewController {
         completionChart.bottomAnchor.constraint(equalTo: activityChartLabel.topAnchor, constant: -8).isActive = true
         
         pieChartLabel = UILabel()
-        pieChartLabel.text = "\(100 - intPercentEmpty)% completion rate"
+        pieChartLabel.text = "\(100 - intPercentEmpty)%"
         pieChartLabel.translatesAutoresizingMaskIntoConstraints = false
-        pieChartLabel.lineBreakMode = .byWordWrapping
-        pieChartLabel.numberOfLines = 4
-        pieChartLabel.font = .systemFont(ofSize: 16)
-        pieChartLabel.sizeToFit()
-        
+        pieChartLabel.textAlignment = .right
+        pieChartLabel.font = .systemFont(ofSize: 40)
         view.addSubview(pieChartLabel)
         
+        let pieChartDescription = UILabel()
+        pieChartDescription.text = "completion rate"
+        pieChartDescription.font = .systemFont(ofSize: 16)
+        pieChartDescription.textAlignment = .right
+        pieChartDescription.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(pieChartDescription)
+        
+        
         let margins = view.layoutMarginsGuide
-        pieChartLabel.centerYAnchor.constraint(equalTo: completionChart.centerYAnchor).isActive = true
-        pieChartLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor).isActive = true
+        pieChartLabel.centerYAnchor.constraint(equalTo: completionChart.centerYAnchor, constant: -16).isActive = true
+        pieChartLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -16).isActive = true
         pieChartLabel.widthAnchor.constraint(equalToConstant: screenWidth * 0.45).isActive = true
+        
+        pieChartDescription.topAnchor.constraint(equalTo: pieChartLabel.bottomAnchor, constant: 0).isActive = true
+        pieChartDescription.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -16).isActive = true
     }
     
     func addGradient() {
@@ -308,8 +321,11 @@ class AnalyticsViewController: UIViewController {
         print(lastEntryDate)
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yy"
+        
         if lastEntryDate != nil {
-            startDateDate = Date(timeInterval: -60 * 60 * 24 * 6, since: lastEntryDate)
+            startDateDate = (Date(timeInterval: -60 * 60 * 24 * 6, since: lastEntryDate) > firstEntryDate)
+                ? Date(timeInterval: -60 * 60 * 24 * 6, since: lastEntryDate)
+                : firstEntryDate
             endDateDate = lastEntryDate
         } else {
             startDateDate = Date()
@@ -331,6 +347,8 @@ class AnalyticsViewController: UIViewController {
         startDate.inputView = startDatePicker
         startDate.text = dateFormatter.string(from: startDateDate)
         startDate.font = .systemFont(ofSize: 24)
+        startDate.backgroundColor = UIColor(red: 226/255, green: 242/255, blue: 160/255, alpha: 1)
+        startDate.textAlignment = .center
         startDate.textColor = systemBlue
         startDate.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(startDate)
@@ -349,6 +367,8 @@ class AnalyticsViewController: UIViewController {
         endDate.inputView = endDatePicker
         endDate.text = dateFormatter.string(from: endDateDate)
         endDate.font = .systemFont(ofSize: 24)
+        endDate.backgroundColor = UIColor(red: 226/255, green: 252/255, blue: 170/255, alpha: 1)
+        endDate.textAlignment = .center
         endDate.textColor = systemBlue
         endDate.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(endDate)
@@ -361,7 +381,6 @@ class AnalyticsViewController: UIViewController {
         submitButton.addTarget(self, action: #selector(submitButtonAction(_:)), for: .touchUpInside)
         view.addSubview(submitButton)
         
-        let margins = view.layoutMarginsGuide
         
         submitButton.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         submitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
@@ -372,11 +391,15 @@ class AnalyticsViewController: UIViewController {
             submitButton.bottomAnchor.constraint(equalTo: bottomLayoutGuide.topAnchor, constant: 0).isActive = true
         }
         
-        startDate.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 16).isActive = true
-        startDate.bottomAnchor.constraint(equalTo: submitButton.topAnchor, constant: -16).isActive = true
+        startDate.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        startDate.bottomAnchor.constraint(equalTo: submitButton.topAnchor).isActive = true
+        startDate.heightAnchor.constraint(equalToConstant: screenHeight * 0.063).isActive = true
+        startDate.widthAnchor.constraint(equalToConstant: screenWidth * 0.5).isActive = true
         
         endDate.centerYAnchor.constraint(equalTo: startDate.centerYAnchor).isActive = true
-        endDate.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -16).isActive = true
+        endDate.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        endDate.heightAnchor.constraint(equalToConstant: screenHeight * 0.063).isActive = true
+        endDate.widthAnchor.constraint(equalToConstant: screenWidth * 0.5).isActive = true
     }
     
     
@@ -398,8 +421,8 @@ class AnalyticsViewController: UIViewController {
         let values: [Double] = [percentEmpty, 1 - percentEmpty]
         
         completionChart.clear()
-        completionChart.setPieChartData(labels: labels, values: values, colors: [ourYellow, ourGreen])
-        pieChartLabel.text = "\(100 - intPercentEmpty)% completion rate"
+        completionChart.setPieChartData(labels: labels, values: values, colors: [ourYellow, chartGreen])
+        pieChartLabel.text = "\(100 - intPercentEmpty)%"
         
         breakOutWords()
         averageWordLengthLabel.text = "\(avgWordCount)"

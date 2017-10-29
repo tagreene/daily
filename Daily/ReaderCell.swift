@@ -18,7 +18,7 @@ class ReaderCell: UICollectionViewCell {
     func setUpViews() {
         addSubview(dateLabel)
         addSubview(entriesLabel)
-        addConstraints(withVisualFormat: "V:|-8-[v0][v1]-8-|", views: dateLabel, entriesLabel)
+        addConstraints(withVisualFormat: "V:|[v0][v1]|", views: dateLabel, entriesLabel)
         addConstraints(withVisualFormat: "H:|-8-[v0]-8-|", views: dateLabel)
         addConstraints(withVisualFormat: "H:|-8-[v0]-8-|", views: entriesLabel)
         dateLabel.widthAnchor.constraint(equalToConstant: frame.width - 16).isActive = true

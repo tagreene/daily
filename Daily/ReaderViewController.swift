@@ -26,6 +26,12 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
     
     var systemBlue = UIColor(red: 0, green: 0.478431, blue: 1, alpha: 1)
     var ourGreen = UIColor(red: 150/255.0, green: 245.0/255.0, blue: 150/255.0, alpha: 1)
+    var ourYellow = UIColor(red: 255/255, green: 254/255, blue: 254/255, alpha: 1)
+    var ourBlue = UIColor(red: 207/255, green: 223/255, blue: 242/255, alpha: 1)
+    var ourBlue2 = UIColor(red: 207/255, green: 223/255, blue: 242/255, alpha: 0.8)
+    var ourSalmon = UIColor(red: 217.0/255.0, green: 133.0/255.0, blue: 137.0/255.0, alpha: 1)
+    var ourYellow2 = UIColor(red: 255.0/255.0, green: 255.0/255.0, blue: 89.0/255.0, alpha: 0.9)
+
     
     let screenHeight = UIScreen.main.bounds.height
     let screenWidth = UIScreen.main.bounds.width
@@ -205,7 +211,9 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
         dateFormatter.dateFormat = "MM/dd/yy"
         
         if lastEntryDate != nil {
-            startDate = Date(timeInterval: -60 * 60 * 24 * 6, since: lastEntryDate)
+            startDate = (Date(timeInterval: -60 * 60 * 24 * 6, since: lastEntryDate) > firstEntryDate)
+                ? Date(timeInterval: -60 * 60 * 24 * 6, since: lastEntryDate)
+                : firstEntryDate
             endDate = lastEntryDate
         } else {
             startDate = Date()
@@ -226,6 +234,8 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
         startDateButton = UITextField()
         startDateButton.inputView = startDatePicker
         startDateButton.text = dateFormatter.string(from: startDate)
+        startDateButton.backgroundColor = UIColor(red: 226/255, green: 242/255, blue: 160/255, alpha: 1)
+        startDateButton.textAlignment = .center
         startDateButton.font = .systemFont(ofSize: 24)
         startDateButton.textColor = systemBlue
         startDateButton.translatesAutoresizingMaskIntoConstraints = false
@@ -244,6 +254,8 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
         endDateButton = UITextField()
         endDateButton.inputView = endDatePicker
         endDateButton.text = dateFormatter.string(from: endDate)
+        endDateButton.backgroundColor = UIColor(red: 226/255, green: 252/255, blue: 170/255, alpha: 1)
+        endDateButton.textAlignment = .center
         endDateButton.font = .systemFont(ofSize: 24)
         endDateButton.textColor = systemBlue
         endDateButton.translatesAutoresizingMaskIntoConstraints = false
@@ -257,8 +269,6 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
         submitButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(submitButton)
         
-        let margins = view.layoutMarginsGuide
-        
         submitButton.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         submitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         submitButton.heightAnchor.constraint(equalToConstant: screenHeight * 0.096).isActive = true
@@ -268,20 +278,26 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
             submitButton.bottomAnchor.constraint(equalTo: bottomLayoutGuide.topAnchor, constant: 0).isActive = true
         }
         
-        startDateButton.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 16).isActive = true
-        startDateButton.bottomAnchor.constraint(equalTo: submitButton.topAnchor, constant: -16).isActive = true
+        startDateButton.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        startDateButton.bottomAnchor.constraint(equalTo: submitButton.topAnchor).isActive = true
+        startDateButton.heightAnchor.constraint(equalToConstant: screenHeight * 0.063).isActive = true
+        startDateButton.widthAnchor.constraint(equalToConstant: screenWidth * 0.5).isActive = true
+        
         
         endDateButton.centerYAnchor.constraint(equalTo: startDateButton.centerYAnchor).isActive = true
-        endDateButton.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -16).isActive = true
+        endDateButton.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        endDateButton.heightAnchor.constraint(equalToConstant: screenHeight * 0.063).isActive = true
+        endDateButton.widthAnchor.constraint(equalToConstant: screenWidth * 0.5).isActive = true
     }
     
     func setUpCollectionView() {
         let layout = UICollectionViewFlowLayout()
         layout.estimatedItemSize = CGSize(width: 1, height: 1)
-        layout.minimumLineSpacing = 0
+        layout.minimumLineSpacing = 8
         collectionView = UICollectionView(frame: containerView.frame, collectionViewLayout: layout)
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = .clear
         collectionView.layer.cornerRadius = 10
+        collectionView.contentInset = UIEdgeInsetsMake(4, 0, 8, 0)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -299,12 +315,13 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
         containerView = UIView()
         containerView.layer.cornerRadius = 5
         containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.backgroundColor = ourYellow
         view.addSubview(containerView)
         
         let margins = view.layoutMarginsGuide
         containerView.leadingAnchor.constraint(equalTo: margins.leadingAnchor).isActive = true
         containerView.trailingAnchor.constraint(equalTo: margins.trailingAnchor).isActive = true
-        containerView.bottomAnchor.constraint(equalTo: startDateButton.topAnchor, constant: -8).isActive = true
+        containerView.bottomAnchor.constraint(equalTo: startDateButton.topAnchor, constant: -32).isActive = true
         
         if #available(iOS 11, *) {
             containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
@@ -330,9 +347,9 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
     func addGradient() {
         let gradient: CAGradientLayer = CAGradientLayer()
         gradient.frame.size = self.view.frame.size
-        gradient.colors = [UIColor.init(red: 255/255.0, green: 250/255.0, blue: 215/255.0, alpha: 1.0).cgColor, UIColor.init(red: 255/255.0, green: 250/255.0, blue: 215/255.0, alpha: 0.9).cgColor]
-        gradient.endPoint = CGPoint.init(x: 0.5, y: 0.5)
-        gradient.startPoint = CGPoint.init(x: 0.5, y: 0.0)
+        gradient.colors = [ourBlue.cgColor, ourBlue2.cgColor]
+        gradient.endPoint = CGPoint.init(x: 1.0, y: 0.25)
+        gradient.startPoint = CGPoint.init(x: 0.5, y: 1.0)
         self.view.layer.insertSublayer(gradient, at: 0)
     }
 }

@@ -105,7 +105,7 @@ class NewEntryViewController: UIViewController, UITextViewDelegate {
     func initializeCancelButton() {
         cancelButton = UIButton(type: .system)
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
-        cancelButton.setTitle("🌀 Start Over 🌀", for: [])
+        cancelButton.setTitle("🌀 Clear Text 🌀", for: [])
         cancelButton.titleLabel!.font = .systemFont(ofSize: 24)
         cancelButton.backgroundColor = UIColor.init(red: 255.0/255.0, green: 255.0/255.0, blue: 89.0/255.0, alpha: 0.9)
         cancelButton.addTarget(self, action: #selector(initDeleteAlert(_:)), for: .touchUpInside)
@@ -135,7 +135,7 @@ class NewEntryViewController: UIViewController, UITextViewDelegate {
         submitButton.translatesAutoresizingMaskIntoConstraints = false
         submitButton.setTitle("🏋️‍♀️ Submit 🏋️‍♀️", for: [])
         submitButton.titleLabel!.font = .systemFont(ofSize: 24)
-        submitButton.backgroundColor = UIColor.init(red: 95.0/255.0, green: 255.0/255.0, blue: 88.0/255.0, alpha: 0.8)
+        submitButton.backgroundColor = UIColor.init(red: 150/255.0, green: 245.0/255.0, blue: 150/255.0, alpha: 1)
         submitButton.addTarget(self, action: #selector(NewEntryViewController.createEntry(_:)), for: .touchUpInside)
         view.addSubview(submitButton)
         

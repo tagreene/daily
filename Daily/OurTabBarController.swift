@@ -20,7 +20,7 @@ class OurTabBarController: UITabBarController {
         newEntryViewController.tabBarItem.image = UIImage(named: "WriteIcon")
         
         let analyticsViewController = AnalyticsViewController()
-        analyticsViewController.title = "Analytics"
+        analyticsViewController.title = "Analytics "
         analyticsViewController.tabBarItem.image = UIImage(named: "AnalyticsIcon")
         
         let readerViewController = ReaderViewController()
