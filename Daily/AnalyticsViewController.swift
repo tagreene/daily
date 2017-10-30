@@ -42,6 +42,7 @@ class AnalyticsViewController: UIViewController {
     var ourBlue = UIColor(red: 0.0/255.0, green: 173.0/255.0, blue: 217.0/255.0, alpha: 1.0)
     var ourSalmon = UIColor(red: 217.0/255.0, green: 133/255.0, blue: 137/255.0, alpha: 1)
     var systemBlue = UIColor(red: 0, green: 0.478431, blue: 1, alpha: 1)
+    var ourYellow2 = UIColor(red: 255.0/255.0, green: 255.0/255.0, blue: 89.0/255.0, alpha: 0.7)
     
     
     let pieChartDataLabels = ["Missed", "Completed"]
@@ -347,7 +348,7 @@ class AnalyticsViewController: UIViewController {
         startDate.inputView = startDatePicker
         startDate.text = dateFormatter.string(from: startDateDate)
         startDate.font = .systemFont(ofSize: 24)
-        startDate.backgroundColor = ourYellow
+        startDate.backgroundColor = ourYellow2
         startDate.textAlignment = .center
         startDate.textColor = systemBlue
         startDate.translatesAutoresizingMaskIntoConstraints = false
@@ -367,7 +368,7 @@ class AnalyticsViewController: UIViewController {
         endDate.inputView = endDatePicker
         endDate.text = dateFormatter.string(from: endDateDate)
         endDate.font = .systemFont(ofSize: 24)
-        endDate.backgroundColor = ourYellow
+        endDate.backgroundColor = ourYellow2
         endDate.textAlignment = .center
         endDate.textColor = systemBlue
         endDate.translatesAutoresizingMaskIntoConstraints = false

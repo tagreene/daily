@@ -30,7 +30,7 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
     var ourBlue = UIColor(red: 207/255, green: 223/255, blue: 242/255, alpha: 1)
     var ourBlue2 = UIColor(red: 207/255, green: 223/255, blue: 242/255, alpha: 0.8)
     var ourSalmon = UIColor(red: 217.0/255.0, green: 133.0/255.0, blue: 137.0/255.0, alpha: 1)
-    var ourYellow2 = UIColor(red: 255.0/255.0, green: 255.0/255.0, blue: 89.0/255.0, alpha: 0.9)
+    var ourYellow2 = UIColor(red: 255.0/255.0, green: 255.0/255.0, blue: 89.0/255.0, alpha: 0.8)
 
     
     let screenHeight = UIScreen.main.bounds.height
