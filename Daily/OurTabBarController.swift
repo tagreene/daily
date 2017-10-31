@@ -27,6 +27,7 @@ class OurTabBarController: UITabBarController {
         readerViewController.title = "Read"
         readerViewController.tabBarItem.image = UIImage(named: "ReadIcon")
         
+        // Randomize whether the readerViewController appears
         if arc4random_uniform(1) == 0 {
             viewControllers = [newEntryViewController, analyticsViewController, readerViewController]
         } else {

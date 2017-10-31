@@ -415,7 +415,7 @@ class AnalyticsViewController: UIViewController {
             (substring, _, _, _) -> () in
             self.words.append(substring!)
         }
-        
+    
         // Better rounding method below
         avgWordCount = Double(words.count) / Double(entries.count)
         avgWordCount = round(avgWordCount * 10) / 10
@@ -426,6 +426,7 @@ class AnalyticsViewController: UIViewController {
         var dedupedWords: [String] = words.removeDuplicates()
         let stopWords = StopWords().englishWordList.map { $0.localizedCapitalized }
         dedupedWords = dedupedWords.filter { !stopWords.contains($0) }
+        print(dedupedWords)
         
         wordCountDict = [:]
         for i in dedupedWords {
@@ -484,7 +485,7 @@ class AnalyticsViewController: UIViewController {
         print("E N T R Y  T U P L E S \n \(entryTuples) \n _______________________ \n")
     }
     
-    // TODO: Make this a UIView extension
+    // TODO: - Make this a UIView extension
     func addGradient() {
         let gradient: CAGradientLayer = CAGradientLayer()
         gradient.frame.size = self.view.frame.size
