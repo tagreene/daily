@@ -52,6 +52,7 @@ class AnalyticsViewController: UIViewController {
     let screenHeight = UIScreen.main.bounds.height
     let screenWidth = UIScreen.main.bounds.width
     
+    // MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         // set up charts here
@@ -67,20 +68,6 @@ class AnalyticsViewController: UIViewController {
         addGradient()
     }
     
-    func setUpNoEntryView() {
-        let noEntryLabel = UILabel()
-        noEntryLabel.text = "You haven't submitted an entry yet! \n\nWhat do you expect to see???"
-        noEntryLabel.font = .systemFont(ofSize: 56)
-        noEntryLabel.textColor = .white
-        noEntryLabel.numberOfLines = 0
-        noEntryLabel.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(noEntryLabel)
-        
-        noEntryLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 8).isActive = true
-        noEntryLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -8).isActive = true
-        noEntryLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         updateMinMaxDateQuery()
@@ -88,51 +75,7 @@ class AnalyticsViewController: UIViewController {
         breakOutWords()
     }
     
-    func updateMinMaxDateQuery() {
-        queryForMinMaxDates()
-        guard lastEntryDate != nil else { return }
-        startDatePicker.minimumDate = firstEntryDate
-        startDatePicker.maximumDate = lastEntryDate
-        endDatePicker.minimumDate = firstEntryDate
-        endDatePicker.maximumDate = lastEntryDate
-    }
-    
-    func queryForMinMaxDates() {
-        let context = AppDelegate.viewContext
-        
-        /*
-         Currently, if you use perform here, your app will crash as setUpDateSelection() will try to unwrap firstEntryDate
-         before you've retrieved them
-         
-         i.e. you have a race condition
-         
-         performAndWait solves this, but maybe theres a better way
-         perhaps pass set up dates in a closure?
-         
-         As of now, performAndWait does not cause a real performance loss, so maybe that is the best answer
-         */
-        
-        context.performAndWait {
-            let request: NSFetchRequest<Entry> = Entry.fetchRequest()
-            request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
-            request.fetchLimit = 1
-            if let entries = try? context.fetch(request), entries != [] {
-                self.firstEntryDate = entries[0].date
-                print(self.firstEntryDate)
-            }
-        }
-        
-        context.performAndWait {
-            let request: NSFetchRequest<Entry> = Entry.fetchRequest()
-            request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
-            request.fetchLimit = 1
-            if let entries = try? context.fetch(request), entries != [] {
-                self.lastEntryDate = entries[0].date
-                print(self.lastEntryDate)
-            }
-        }
-    }
-    
+    // MARK: - Set Up UIViews
     func setUpWordLabels() {
         mostCommonWordLabel = UILabel()
         print("Most used word \(mostUsedWord), \(mostUsedWord.isEmpty)")
@@ -187,45 +130,6 @@ class AnalyticsViewController: UIViewController {
         averageWordLengthDescription.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -16).isActive = true
     }
     
-    func breakOutWords() {
-        var string = entries.reduce("") { $0 + $1.text! + " " }
-        string = string.localizedCapitalized
-        words = []
-        
-        print("does this print???")
-        
-        // You need to understand what this is actually doing
-        string.enumerateSubstrings(in: string.startIndex..<string.endIndex, options: .byWords) {
-            (substring, _, _, _) -> () in
-            self.words.append(substring!)
-        }
-        
-        // Better rounding method below
-        avgWordCount = Double(words.count) / Double(entries.count)
-        avgWordCount = round(avgWordCount * 10) / 10
-        if avgWordCount.isNaN {
-            avgWordCount = 0
-        }
-        
-        var dedupedWords: [String] = words.removeDuplicates()
-        let stopWords = StopWords().englishWordList.map { $0.localizedCapitalized }
-        dedupedWords = dedupedWords.filter { !stopWords.contains($0) }
-        
-        wordCountDict = [:]
-        for i in dedupedWords {
-            wordCountDict[i] = words.filter { $0 == i }.count
-        }
-        
-        // In case of multiple zvalues having the same highest count, the below will return the most recently used one
-        // I think?
-        let optionalMostUsedWord = wordCountDict.max { a, b in a.value < b.value }?.key
-        guard let ourMostUsedWord = optionalMostUsedWord else {
-            mostUsedWord = "No Data🤷🏻‍♀️"
-            return
-        }
-        mostUsedWord = ourMostUsedWord
-    }
-    
     func setUpBarChart() {
         activityChart = BarChartView()
         activityChart.translatesAutoresizingMaskIntoConstraints = false
@@ -249,18 +153,9 @@ class AnalyticsViewController: UIViewController {
         activityChartLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 16).isActive = true
     }
     
-    func setActivityChartLabelText(data: [(Date, Int)]) -> String {
-        let totalEntries = Double(data.count)
-        let totalSum = Double(data.reduce(0) { $0 + $1.1 })
-        let average = totalSum / totalEntries
-        let string = String(format: "%.1f", average)
-        return "average \(string) entries per day"
-    }
-    
     func setUpPieChart() {
-        
         let labels = ["Missed", "Completed"]
-        let countEmptyDays = entryTuples.filter { $0.1 == 0 }.count
+        let countEmptyDays = entryTuples.filter { $0.int == 0 }.count
         
         // The dance below is to get a nice human readible double rounded out of percentEmpty, which is used in the values command
         // we also get intPercentEmpty, which supplies the pieChartLabel
@@ -306,15 +201,6 @@ class AnalyticsViewController: UIViewController {
         
         pieChartDescription.topAnchor.constraint(equalTo: pieChartLabel.bottomAnchor, constant: 0).isActive = true
         pieChartDescription.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -16).isActive = true
-    }
-    
-    func addGradient() {
-        let gradient: CAGradientLayer = CAGradientLayer()
-        gradient.frame.size = self.view.frame.size
-        gradient.colors = [UIColor.init(red: 205.0/255.0, green: 255.0/255.0, blue: 255.0/255.0, alpha: 1.0).cgColor, UIColor.init(red: 205.0/255.0, green: 255.0/255.0, blue: 255.0/255.0, alpha: 0.5).cgColor]
-        gradient.endPoint = CGPoint.init(x: 1.0, y: 0.25)
-        gradient.startPoint = CGPoint.init(x: 0.5, y: 1.0)
-        self.view.layer.insertSublayer(gradient, at: 0)
     }
     
     func setUpDateSelection() {
@@ -403,72 +289,7 @@ class AnalyticsViewController: UIViewController {
         endDate.widthAnchor.constraint(equalToConstant: screenWidth * 0.498).isActive = true
     }
     
-    
-    @objc func submitButtonAction(_ sender: UIButton) {
-        updateEntities()
-        activityChart.clear()
-        activityChart.setBarChartData(dataSource: entryTuples, label: "Daily Activity", color: ourBlue)
-        activityChartLabel.text = { setActivityChartLabelText(data: entryTuples) }()
-        
-        
-        let labels = ["Missed", "Completed"]
-        let countEmptyDays = entryTuples.filter { $0.1 == 0 }.count
-        
-        // The dance below is to get a nice human readible double rounded out of percentEmpty, which is used in the values command
-        // we also get intPercentEmpty, which supplies the pieChartLabel
-        var percentEmpty = Double(countEmptyDays) / Double(entryTuples.count)
-        let intPercentEmpty = Int(round(percentEmpty * 100))
-        percentEmpty = Double(intPercentEmpty) / 100
-        let values: [Double] = [percentEmpty, 1 - percentEmpty]
-        
-        completionChart.clear()
-        completionChart.setPieChartData(labels: labels, values: values, colors: [ourYellow, chartGreen])
-        pieChartLabel.text = "\(100 - intPercentEmpty)%"
-        
-        breakOutWords()
-        averageWordLengthLabel.text = "\(avgWordCount)"
-        mostCommonWordLabel.text = mostUsedWord
-        
-    }
-    
-    func updateEntities() {
-        guard let startDateString = startDate.text, let endDateString = endDate.text else { return }
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yy"
-        
-        guard var firstDate = dateFormatter.date(from: startDateString) else { return }
-        guard var lastDate = dateFormatter.date(from: endDateString) else { return }
-        
-        lastDate = Date(timeInterval: 60 * 60 * 24, since: lastDate)
-        
-        let context = AppDelegate.viewContext
-        let ourRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        ourRequest.sortDescriptors = []
-        ourRequest.predicate = NSPredicate(format: "date >= %a AND date < %a", argumentArray: [firstDate as NSDate, lastDate as NSDate])
-        
-        
-        // Can you just add a closure to perform?
-        context.performAndWait {
-            let entryArray = try? context.fetch(ourRequest)
-            
-            guard let ourEntryArray = entryArray else {
-                print("No Entries???")
-                return
-            }
-            
-            
-            self.entries = ourEntryArray
-        }
-        
-        self.entryTuples.removeAll()
-        while firstDate < lastDate {
-            let countLastDate = Date(timeInterval: 60 * 60 * 24, since: firstDate)
-            let filteredEntries = entries.filter { $0.date! >= firstDate && $0.date! < countLastDate }
-            self.entryTuples.append((date: firstDate, int: filteredEntries.count))
-            firstDate = Date(timeInterval: 60 * 60 * 24, since: firstDate)
-        }
-        print("E N T R Y  T U P L E S \n \(entryTuples) \n _______________________ \n")
-    }
+    // MARK: - UI Methods
     
     func initTapGestureRecognizer() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard(_:)))
@@ -510,5 +331,166 @@ class AnalyticsViewController: UIViewController {
     @objc func dismissKeyboard(_ sender: UITapGestureRecognizer) {
         startDate.resignFirstResponder()
         endDate.resignFirstResponder()
+    }
+    
+    @objc func submitButtonAction(_ sender: UIButton) {
+        updateEntities()
+        activityChart.clear()
+        activityChart.setBarChartData(dataSource: entryTuples, label: "Daily Activity", color: ourBlue)
+        activityChartLabel.text = { setActivityChartLabelText(data: entryTuples) }()
+        
+        
+        let labels = ["Missed", "Completed"]
+        let countEmptyDays = entryTuples.filter { $0.1 == 0 }.count
+        
+        // The dance below is to get a nice human readible double rounded out of percentEmpty, which is used in the values command
+        // we also get intPercentEmpty, which supplies the pieChartLabel
+        var percentEmpty = Double(countEmptyDays) / Double(entryTuples.count)
+        let intPercentEmpty = Int(round(percentEmpty * 100))
+        percentEmpty = Double(intPercentEmpty) / 100
+        let values: [Double] = [percentEmpty, 1 - percentEmpty]
+        
+        completionChart.clear()
+        completionChart.setPieChartData(labels: labels, values: values, colors: [ourYellow, chartGreen])
+        pieChartLabel.text = "\(100 - intPercentEmpty)%"
+        
+        breakOutWords()
+        averageWordLengthLabel.text = "\(avgWordCount)"
+        mostCommonWordLabel.text = mostUsedWord
+        
+    }
+    
+    // MARK: - Core Data Queries
+    func queryForMinMaxDates() {
+        let context = AppDelegate.viewContext
+        
+        /*
+         Currently, if you use perform here, your app will crash as setUpDateSelection() will try to unwrap firstEntryDate
+         before you've retrieved them
+         
+         i.e. you have a race condition
+         
+         performAndWait solves this, but maybe theres a better way
+         perhaps pass set up dates in a closure?
+         
+         As of now, performAndWait does not cause a real performance loss, so maybe that is the best answer
+         */
+        
+        context.performAndWait {
+            let request: NSFetchRequest<Entry> = Entry.fetchRequest()
+            request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+            request.fetchLimit = 1
+            if let entries = try? context.fetch(request), entries != [] {
+                self.firstEntryDate = entries[0].date
+                print(self.firstEntryDate)
+            }
+        }
+        
+        context.performAndWait {
+            let request: NSFetchRequest<Entry> = Entry.fetchRequest()
+            request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
+            request.fetchLimit = 1
+            if let entries = try? context.fetch(request), entries != [] {
+                self.lastEntryDate = entries[0].date
+                print(self.lastEntryDate)
+            }
+        }
+    }
+    
+    func updateMinMaxDateQuery() {
+        queryForMinMaxDates()
+        guard lastEntryDate != nil else { return }
+        startDatePicker.minimumDate = firstEntryDate
+        startDatePicker.maximumDate = lastEntryDate
+        endDatePicker.minimumDate = firstEntryDate
+        endDatePicker.maximumDate = lastEntryDate
+    }
+    
+    func breakOutWords() {
+        var string = entries.reduce("") { $0 + $1.text! + " " }
+        string = string.localizedCapitalized
+        words = []
+        
+        string.enumerateSubstrings(in: string.startIndex..<string.endIndex, options: .byWords) {
+            (substring, _, _, _) -> () in
+            self.words.append(substring!)
+        }
+        
+        // Better rounding method below
+        avgWordCount = Double(words.count) / Double(entries.count)
+        avgWordCount = round(avgWordCount * 10) / 10
+        if avgWordCount.isNaN {
+            avgWordCount = 0
+        }
+        
+        var dedupedWords: [String] = words.removeDuplicates()
+        let stopWords = StopWords().englishWordList.map { $0.localizedCapitalized }
+        dedupedWords = dedupedWords.filter { !stopWords.contains($0) }
+        
+        wordCountDict = [:]
+        for i in dedupedWords {
+            wordCountDict[i] = words.filter { $0 == i }.count
+        }
+        
+        let optionalMostUsedWord = wordCountDict.max { a, b in a.value < b.value }?.key
+        guard let ourMostUsedWord = optionalMostUsedWord else {
+            mostUsedWord = "No Data🤷🏻‍♀️"
+            return
+        }
+        mostUsedWord = ourMostUsedWord
+    }
+    
+    func setActivityChartLabelText(data: [(Date, Int)]) -> String {
+        let totalEntries = Double(data.count)
+        let totalSum = Double(data.reduce(0) { $0 + $1.1 })
+        let average = totalSum / totalEntries
+        let string = String(format: "%.1f", average)
+        return "average \(string) entries per day"
+    }
+    
+    func updateEntities() {
+        guard let startDateString = startDate.text, let endDateString = endDate.text else { return }
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/yy"
+        
+        guard var firstDate = dateFormatter.date(from: startDateString) else { return }
+        guard var lastDate = dateFormatter.date(from: endDateString) else { return }
+        
+        lastDate = Date(timeInterval: 60 * 60 * 24, since: lastDate)
+        
+        let context = AppDelegate.viewContext
+        let ourRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
+        ourRequest.sortDescriptors = []
+        ourRequest.predicate = NSPredicate(format: "date >= %a AND date < %a", argumentArray: [firstDate as NSDate, lastDate as NSDate])
+        
+        
+        // Can you just add a closure to perform?
+        context.performAndWait {
+            let entryArray = try? context.fetch(ourRequest)
+            guard let ourEntryArray = entryArray else {
+                print("No Entries???")
+                return
+            }
+            self.entries = ourEntryArray
+        }
+        
+        self.entryTuples.removeAll()
+        while firstDate < lastDate {
+            let countLastDate = Date(timeInterval: 60 * 60 * 24, since: firstDate)
+            let filteredEntries = entries.filter { $0.date! >= firstDate && $0.date! < countLastDate }
+            self.entryTuples.append((date: firstDate, int: filteredEntries.count))
+            firstDate = Date(timeInterval: 60 * 60 * 24, since: firstDate)
+        }
+        print("E N T R Y  T U P L E S \n \(entryTuples) \n _______________________ \n")
+    }
+    
+    // TODO: Make this a UIView extension
+    func addGradient() {
+        let gradient: CAGradientLayer = CAGradientLayer()
+        gradient.frame.size = self.view.frame.size
+        gradient.colors = [UIColor.init(red: 205.0/255.0, green: 255.0/255.0, blue: 255.0/255.0, alpha: 1.0).cgColor, UIColor.init(red: 205.0/255.0, green: 255.0/255.0, blue: 255.0/255.0, alpha: 0.5).cgColor]
+        gradient.endPoint = CGPoint.init(x: 1.0, y: 0.25)
+        gradient.startPoint = CGPoint.init(x: 0.5, y: 1.0)
+        self.view.layer.insertSublayer(gradient, at: 0)
     }
 }
