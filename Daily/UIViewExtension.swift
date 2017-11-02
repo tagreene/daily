@@ -10,8 +10,9 @@
 
 import UIKit
 
-// Add horizontal shake
 extension UIView {
+    
+    // Add Horizontal and Vertical Animation
     func shakeHorizontally(_ completionBlock: @escaping () -> Void){
         CATransaction.begin()
         CATransaction.setCompletionBlock(completionBlock)
@@ -24,9 +25,7 @@ extension UIView {
         self.layer.add(animation, forKey: "position")
         CATransaction.commit()
     }
-}
 
-extension UIView {
     func shakeVertically(_ completionBlock: @escaping () -> Void){
         CATransaction.begin()
         CATransaction.setCompletionBlock(completionBlock)
@@ -39,5 +38,18 @@ extension UIView {
         self.layer.add(animation, forKey: "position")
         CATransaction.commit()
     }
+    
+    // Add Constraint Method for ReaderCells
+    func addConstraints(withVisualFormat format: String, views: UIView...) {
+        var viewsDictionary = [String:UIView]()
+        for (index, view) in views.enumerated() {
+            let key = "v\(index)"
+            view.translatesAutoresizingMaskIntoConstraints = false
+            viewsDictionary[key] = view
+        }
+        
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: format, options: NSLayoutFormatOptions(), metrics: nil, views: viewsDictionary))
+    }
+    
 }
 

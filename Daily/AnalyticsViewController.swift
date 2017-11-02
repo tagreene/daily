@@ -289,6 +289,15 @@ class AnalyticsViewController: UIViewController {
         endDate.widthAnchor.constraint(equalToConstant: screenWidth * 0.498).isActive = true
     }
     
+    func addGradient() {
+        let gradient: CAGradientLayer = CAGradientLayer()
+        gradient.frame.size = self.view.frame.size
+        gradient.colors = [UIColor.init(red: 205.0/255.0, green: 255.0/255.0, blue: 255.0/255.0, alpha: 1.0).cgColor, UIColor.init(red: 205.0/255.0, green: 255.0/255.0, blue: 255.0/255.0, alpha: 0.5).cgColor]
+        gradient.endPoint = CGPoint.init(x: 1.0, y: 0.25)
+        gradient.startPoint = CGPoint.init(x: 0.5, y: 1.0)
+        self.view.layer.insertSublayer(gradient, at: 0)
+    }
+    
     // MARK: - UI Methods
     
     func initTapGestureRecognizer() {
@@ -485,13 +494,4 @@ class AnalyticsViewController: UIViewController {
         print("E N T R Y  T U P L E S \n \(entryTuples) \n _______________________ \n")
     }
     
-    // TODO: - Make this a UIView extension
-    func addGradient() {
-        let gradient: CAGradientLayer = CAGradientLayer()
-        gradient.frame.size = self.view.frame.size
-        gradient.colors = [UIColor.init(red: 205.0/255.0, green: 255.0/255.0, blue: 255.0/255.0, alpha: 1.0).cgColor, UIColor.init(red: 205.0/255.0, green: 255.0/255.0, blue: 255.0/255.0, alpha: 0.5).cgColor]
-        gradient.endPoint = CGPoint.init(x: 1.0, y: 0.25)
-        gradient.startPoint = CGPoint.init(x: 0.5, y: 1.0)
-        self.view.layer.insertSublayer(gradient, at: 0)
-    }
 }

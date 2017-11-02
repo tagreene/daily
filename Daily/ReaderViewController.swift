@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class ReaderViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class ReaderViewController: UIViewController, UICollectionViewDataSource {
     var containerView: UIView!
     var collectionView: UICollectionView!
     var startDateButton = UITextField()
@@ -36,114 +36,7 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
     let screenHeight = UIScreen.main.bounds.height
     let screenWidth = UIScreen.main.bounds.width
     
-    @objc func submitButtonAction(_ sender: UIButton) {
-        updateEntities()
-        collectionView.reloadData()
-    }
-    
-    func updateEntities() {
-        guard let startDateString = startDateButton.text, let endDateString = endDateButton.text else { return }
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yy"
-        
-        guard var firstDate = dateFormatter.date(from: startDateString) else { return }
-        guard var lastDate = dateFormatter.date(from: endDateString) else { return }
-        
-        lastDate = Date(timeInterval: 60 * 60 * 24, since: lastDate)
-        
-        let context = AppDelegate.viewContext
-        let ourRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        ourRequest.sortDescriptors = []
-        ourRequest.predicate = NSPredicate(format: "date >= %a AND date < %a", argumentArray: [firstDate as NSDate, lastDate as NSDate])
-        
-        
-        // Can you just add a closure to perform?
-        context.performAndWait {
-            let entryArray = try? context.fetch(ourRequest)
-            
-            guard let ourEntryArray = entryArray else {
-                print("No Entries???")
-                return
-            }
-            
-            self.entries = ourEntryArray
-        }
-        
-        let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "h:mm a"
-        timeFormatter.amSymbol = "am"
-        timeFormatter.pmSymbol = "pm"
-        timeFormatter.locale = Locale(identifier: "en_US_POSIX")
-        entriesDict.removeAll()
-        while firstDate < lastDate {
-            print(firstDate)
-            print(lastDate)
-            let countLastDate = Date(timeInterval: 60 * 60 * 24, since: firstDate)
-            print(countLastDate)
-            let filteredEntries = entries.filter { $0.date! >= firstDate && $0.date! < countLastDate }
-            var daysEntries = String()
-            for i in filteredEntries {
-                guard let entryDate = i.date else { return }
-                let entryTime = timeFormatter.string(from: entryDate)
-                guard let entryText = i.text else { return }
-                
-                daysEntries += "\(entryTime)\n\(entryText)\n\n"
-            }
-            daysEntries = String(daysEntries.dropLast(2)) // Kill the two hanging carriage returns - \n is treated as one character
-            if !daysEntries.isEmpty {
-                entriesDict.append((date: firstDate, entries: daysEntries))
-            }
-            firstDate = Date(timeInterval: 60 * 60 * 24, since: firstDate)
-        }
-        print(entriesDict)
-    }
-    
-    func updateMinMaxDateQuery() {
-        queryForMinMaxDates()
-        guard lastEntryDate != nil else { return }
-        startDatePicker.minimumDate = firstEntryDate
-        startDatePicker.maximumDate = lastEntryDate
-        endDatePicker.minimumDate = firstEntryDate
-        endDatePicker.maximumDate = lastEntryDate
-    }
-    
-    func queryForMinMaxDates() {
-        let context = AppDelegate.viewContext
-        
-        /*
-         Currently, if you use perform here, your app will crash as setUpDateSelection() will try to unwrap firstEntryDate
-         before you've retrieved them
-         
-         i.e. you have a race condition
-         
-         performAndWait solves this, but maybe theres a better way
-         perhaps pass set up dates in a closure?
-         
-         As of now, performAndWait does not cause a real performance loss, so maybe that is the best answer
-         */
-        
-        context.performAndWait {
-            let request: NSFetchRequest<Entry> = Entry.fetchRequest()
-            request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
-            request.fetchLimit = 1
-            if let entries = try? context.fetch(request), entries != [] {
-                self.firstEntryDate = entries[0].date
-                print(self.firstEntryDate)
-            }
-        }
-        
-        context.performAndWait {
-            let request: NSFetchRequest<Entry> = Entry.fetchRequest()
-            request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
-            request.fetchLimit = 1
-            if let entries = try? context.fetch(request), entries != [] {
-                self.lastEntryDate = entries[0].date
-                print(self.lastEntryDate)
-            }
-        }
-    }
-    
-    
+    // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -164,48 +57,7 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
         collectionView.reloadData()
     }
     
-    @objc func handleStartDatePicker(_ sender: UIDatePicker) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yy"
-        startDateButton.text = dateFormatter.string(from: sender.date)
-        startDate = sender.date
-        
-        // Handle Date Oddities
-        if startDate > endDate {
-            endDateButton.text = startDateButton.text
-            endDate = startDate
-            endDatePicker.setDate(startDate, animated: false)
-        }
-        print(startDate)
-    }
-    
-    @objc func handleEndDatePicker(_ sender: UIDatePicker) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yy"
-        endDateButton.text = dateFormatter.string(from: sender.date)
-        endDate = sender.date
-        
-        
-        // Handle Date Oddities
-        if endDate < startDate {
-            startDateButton.text = endDateButton.text
-            startDate = endDate
-            startDatePicker.setDate(endDate, animated: false)
-        }
-        print(endDate)
-    }
-    
-    func initTapGestureRecognizer() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard(_:)))
-        
-        view.addGestureRecognizer(tap)
-    }
-    
-    @objc func dismissKeyboard(_ sender: UITapGestureRecognizer) {
-        startDateButton.resignFirstResponder()
-        endDateButton.resignFirstResponder()
-    }
-    
+    // MARK: - Set Up UIViews
     func setUpDateSelection() {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yy"
@@ -330,6 +182,171 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
         }
     }
     
+    func addGradient() {
+        let gradient: CAGradientLayer = CAGradientLayer()
+        gradient.frame.size = self.view.frame.size
+        gradient.colors = [ourBlue.cgColor, ourBlue2.cgColor]
+        gradient.endPoint = CGPoint.init(x: 1.0, y: 0.25)
+        gradient.startPoint = CGPoint.init(x: 0.5, y: 1.0)
+        self.view.layer.insertSublayer(gradient, at: 0)
+    }
+    
+    // MARK: - UI Methods
+    @objc func handleStartDatePicker(_ sender: UIDatePicker) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/yy"
+        startDateButton.text = dateFormatter.string(from: sender.date)
+        startDate = sender.date
+        
+        // Handle Date Oddities
+        if startDate > endDate {
+            endDateButton.text = startDateButton.text
+            endDate = startDate
+            endDatePicker.setDate(startDate, animated: false)
+        }
+        print(startDate)
+    }
+    
+    @objc func handleEndDatePicker(_ sender: UIDatePicker) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/yy"
+        endDateButton.text = dateFormatter.string(from: sender.date)
+        endDate = sender.date
+        
+        
+        // Handle Date Oddities
+        if endDate < startDate {
+            startDateButton.text = endDateButton.text
+            startDate = endDate
+            startDatePicker.setDate(endDate, animated: false)
+        }
+        print(endDate)
+    }
+    
+    func initTapGestureRecognizer() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard(_:)))
+        
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard(_ sender: UITapGestureRecognizer) {
+        startDateButton.resignFirstResponder()
+        endDateButton.resignFirstResponder()
+    }
+    
+    @objc func submitButtonAction(_ sender: UIButton) {
+        updateEntities()
+        collectionView.reloadData()
+    }
+    
+    func updateEntities() {
+        guard let startDateString = startDateButton.text, let endDateString = endDateButton.text else { return }
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/yy"
+        
+        guard var firstDate = dateFormatter.date(from: startDateString) else { return }
+        guard var lastDate = dateFormatter.date(from: endDateString) else { return }
+        
+        lastDate = Date(timeInterval: 60 * 60 * 24, since: lastDate)
+        
+        let context = AppDelegate.viewContext
+        let ourRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
+        ourRequest.sortDescriptors = []
+        ourRequest.predicate = NSPredicate(format: "date >= %a AND date < %a", argumentArray: [firstDate as NSDate, lastDate as NSDate])
+        
+        
+        // Can you just add a closure to perform?
+        context.performAndWait {
+            let entryArray = try? context.fetch(ourRequest)
+            
+            guard let ourEntryArray = entryArray else {
+                print("No Entries???")
+                return
+            }
+            
+            self.entries = ourEntryArray
+        }
+        
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "h:mm a"
+        timeFormatter.amSymbol = "am"
+        timeFormatter.pmSymbol = "pm"
+        timeFormatter.locale = Locale(identifier: "en_US_POSIX")
+        entriesDict.removeAll()
+        while firstDate < lastDate {
+            print(firstDate)
+            print(lastDate)
+            let countLastDate = Date(timeInterval: 60 * 60 * 24, since: firstDate)
+            print(countLastDate)
+            let filteredEntries = entries.filter { $0.date! >= firstDate && $0.date! < countLastDate }
+            var daysEntries = String()
+            for i in filteredEntries {
+                guard let entryDate = i.date else { return }
+                let entryTime = timeFormatter.string(from: entryDate)
+                guard let entryText = i.text else { return }
+                
+                daysEntries += "\(entryTime)\n\(entryText)\n\n"
+            }
+            daysEntries = String(daysEntries.dropLast(2)) // Kill the two hanging carriage returns - \n is treated as one character
+            if !daysEntries.isEmpty {
+                entriesDict.append((date: firstDate, entries: daysEntries))
+            }
+            firstDate = Date(timeInterval: 60 * 60 * 24, since: firstDate)
+        }
+        print(entriesDict)
+    }
+    
+    // MARK: - CoreData Queries
+    func updateMinMaxDateQuery() {
+        queryForMinMaxDates()
+        guard lastEntryDate != nil else { return }
+        startDatePicker.minimumDate = firstEntryDate
+        startDatePicker.maximumDate = lastEntryDate
+        endDatePicker.minimumDate = firstEntryDate
+        endDatePicker.maximumDate = lastEntryDate
+    }
+    
+    func queryForMinMaxDates() {
+        let context = AppDelegate.viewContext
+        
+        /*
+         Currently, if you use perform here, your app will crash as setUpDateSelection() will try to unwrap firstEntryDate
+         before you've retrieved them
+         
+         i.e. you have a race condition
+         
+         performAndWait solves this, but maybe theres a better way
+         perhaps pass set up dates in a closure?
+         
+         As of now, performAndWait does not cause a real performance loss, so maybe that is the best answer
+         */
+        
+        context.performAndWait {
+            let request: NSFetchRequest<Entry> = Entry.fetchRequest()
+            request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+            request.fetchLimit = 1
+            if let entries = try? context.fetch(request), entries != [] {
+                self.firstEntryDate = entries[0].date
+                print(self.firstEntryDate)
+            }
+        }
+        
+        context.performAndWait {
+            let request: NSFetchRequest<Entry> = Entry.fetchRequest()
+            request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
+            request.fetchLimit = 1
+            if let entries = try? context.fetch(request), entries != [] {
+                self.lastEntryDate = entries[0].date
+                print(self.lastEntryDate)
+            }
+        }
+    }
+
+}
+
+// MARK: - UICollectionViewDelegateFlowLayout Extension
+extension ReaderViewController: UICollectionViewDelegateFlowLayout {
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return entriesDict.count
     }
@@ -344,12 +361,4 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource, UIColl
         return CGSize(width: containerView.frame.width, height: 10)
     }
     
-    func addGradient() {
-        let gradient: CAGradientLayer = CAGradientLayer()
-        gradient.frame.size = self.view.frame.size
-        gradient.colors = [ourBlue.cgColor, ourBlue2.cgColor]
-        gradient.endPoint = CGPoint.init(x: 1.0, y: 0.25)
-        gradient.startPoint = CGPoint.init(x: 0.5, y: 1.0)
-        self.view.layer.insertSublayer(gradient, at: 0)
-    }
 }

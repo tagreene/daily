@@ -10,11 +10,6 @@ import UIKit
 
 class ReaderCell: UICollectionViewCell {
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setUpViews()
-    }
-    
     func setUpViews() {
         addSubview(dateLabel)
         addSubview(entriesLabel)
@@ -29,14 +24,12 @@ class ReaderCell: UICollectionViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 24)
         label.textAlignment = .right
-        label.text = "10/17/17"
         return label
     }()
     
     var entriesLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
-        label.text = "4:30PM\nPlease God??\n\n3:02 PM\nI hope this works like I think it will"
         label.numberOfLines = 0
         return label
     }()
@@ -50,20 +43,14 @@ class ReaderCell: UICollectionViewCell {
         print(entries)
     }
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setUpViews()
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
 }
 
-extension UIView {
-    func addConstraints(withVisualFormat format: String, views: UIView...) {
-        var viewsDictionary = [String:UIView]()
-        for (index, view) in views.enumerated() {
-            let key = "v\(index)"
-            view.translatesAutoresizingMaskIntoConstraints = false
-            viewsDictionary[key] = view
-        }
-        
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: format, options: NSLayoutFormatOptions(), metrics: nil, views: viewsDictionary))
-    }
-}

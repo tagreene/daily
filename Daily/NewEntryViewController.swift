@@ -120,8 +120,16 @@ class NewEntryViewController: UIViewController {
         
     }
     
-    // MARK: - UI Methods
+    func addGradient() {
+        let gradient: CAGradientLayer = CAGradientLayer()
+        gradient.frame.size = self.view.frame.size
+        gradient.colors = [ourSalmon.cgColor, ourSalmon2.cgColor]
+        gradient.endPoint = CGPoint.init(x: 1.0, y: 0.25)
+        gradient.startPoint = CGPoint.init(x: 0.5, y: 1.0)
+        self.view.layer.insertSublayer(gradient, at: 0)
+    }
     
+    // MARK: - UI Methods
     func deleteEntry() {
         let deleteCompletion = {
             self.ourTextView.text = self.defaultString
@@ -179,16 +187,7 @@ class NewEntryViewController: UIViewController {
     @objc func dismissKeyboard(_ sender: UITapGestureRecognizer) {
         textViewDidEndEditing(ourTextView)
     }
-    
-    // TODO: - Make this a UIView Extension
-    func addGradient() {
-        let gradient: CAGradientLayer = CAGradientLayer()
-        gradient.frame.size = self.view.frame.size
-        gradient.colors = [ourSalmon.cgColor, ourSalmon2.cgColor]
-        gradient.endPoint = CGPoint.init(x: 1.0, y: 0.25)
-        gradient.startPoint = CGPoint.init(x: 0.5, y: 1.0)
-        self.view.layer.insertSublayer(gradient, at: 0)
-    }
+
 }
 
 // MARK: - UITextViewDelegate Extension
