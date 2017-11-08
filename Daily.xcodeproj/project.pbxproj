@@ -17,7 +17,6 @@
 		4B6A35561F60AF8400AA41A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B6A35551F60AF8400AA41A5 /* Assets.xcassets */; };
 		4B6A35641F60AF8400AA41A5 /* DailyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A35631F60AF8400AA41A5 /* DailyTests.swift */; };
 		4B6A356F1F60AF8400AA41A5 /* DailyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A356E1F60AF8400AA41A5 /* DailyUITests.swift */; };
-		4B6A67EC1F7B04B3002F7ACC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B6A67EB1F7B04B3002F7ACC /* Main.storyboard */; };
 		4B6A67EE1F7B068D002F7ACC /* AnalyticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A67ED1F7B068D002F7ACC /* AnalyticsViewController.swift */; };
 		4B6A67F01F7B09A9002F7ACC /* ReaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A67EF1F7B09A9002F7ACC /* ReaderViewController.swift */; };
 		4B7AA1441F7EDDCC00824F98 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7AA1431F7EDDCC00824F98 /* UIViewExtension.swift */; };
@@ -65,7 +64,6 @@
 		4B6A356A1F60AF8400AA41A5 /* DailyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DailyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B6A356E1F60AF8400AA41A5 /* DailyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyUITests.swift; sourceTree = "<group>"; };
 		4B6A35701F60AF8400AA41A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4B6A67EB1F7B04B3002F7ACC /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		4B6A67ED1F7B068D002F7ACC /* AnalyticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsViewController.swift; sourceTree = "<group>"; };
 		4B6A67EF1F7B09A9002F7ACC /* ReaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderViewController.swift; sourceTree = "<group>"; };
 		4B7AA1431F7EDDCC00824F98 /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
@@ -149,7 +147,6 @@
 				4B2C0D991F96ECDB0057DC68 /* ReaderCell.swift */,
 				4BB81BBB1F8B42F700BD7E20 /* Model.xcdatamodeld */,
 				4B26DCB11FA8081900998C3A /* Entry.swift */,
-				4B6A67EB1F7B04B3002F7ACC /* Main.storyboard */,
 				4BB7BD171F82ECAB00AEB13C /* BarChartViewExtension.swift */,
 				4B232AF01F902D7700F4E039 /* PieChartViewExtension.swift */,
 				4B6A35551F60AF8400AA41A5 /* Assets.xcassets */,
@@ -322,7 +319,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B6A35561F60AF8400AA41A5 /* Assets.xcassets in Resources */,
-				4B6A67EC1F7B04B3002F7ACC /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -659,12 +655,16 @@
 			baseConfigurationReference = DA417763BA0C5B5C51A9BA7D /* Pods-Daily.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 847HNTGAGK;
 				INFOPLIST_FILE = Daily/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.greene.Daily;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -676,12 +676,16 @@
 			baseConfigurationReference = 7D129BA7F5E1DCACBB60669E /* Pods-Daily.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 847HNTGAGK;
 				INFOPLIST_FILE = Daily/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.greene.Daily;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
