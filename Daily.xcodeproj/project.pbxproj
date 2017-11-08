@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4B098DA81FB2C66E00BE1AF0 /* AppDelegateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B098DA71FB2C66E00BE1AF0 /* AppDelegateExtension.swift */; };
 		4B232AF11F902D7700F4E039 /* PieChartViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B232AF01F902D7700F4E039 /* PieChartViewExtension.swift */; };
 		4B26DCB01FA7F97E00998C3A /* DateGranularity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B26DCAF1FA7F97E00998C3A /* DateGranularity.swift */; };
 		4B26DCB21FA8081900998C3A /* Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B26DCB11FA8081900998C3A /* Entry.swift */; };
@@ -48,6 +49,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4B098DA71FB2C66E00BE1AF0 /* AppDelegateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateExtension.swift; sourceTree = "<group>"; };
 		4B232AF01F902D7700F4E039 /* PieChartViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChartViewExtension.swift; sourceTree = "<group>"; };
 		4B26DCAF1FA7F97E00998C3A /* DateGranularity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateGranularity.swift; sourceTree = "<group>"; };
 		4B26DCB11FA8081900998C3A /* Entry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entry.swift; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				4B6A354E1F60AF8400AA41A5 /* AppDelegate.swift */,
+				4B098DA71FB2C66E00BE1AF0 /* AppDelegateExtension.swift */,
 				4B7AA1431F7EDDCC00824F98 /* UIViewExtension.swift */,
 				4B6A35501F60AF8400AA41A5 /* NewEntryViewController.swift */,
 				4B26DCAF1FA7F97E00998C3A /* DateGranularity.swift */,
@@ -429,12 +432,10 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Daily/Pods-Daily-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
-				"${BUILT_PRODUCTS_DIR}/Timepiece/Timepiece.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Timepiece.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -509,6 +510,7 @@
 				4B26DCB01FA7F97E00998C3A /* DateGranularity.swift in Sources */,
 				4B7AA1441F7EDDCC00824F98 /* UIViewExtension.swift in Sources */,
 				4B2C0D9A1F96ECDB0057DC68 /* ReaderCell.swift in Sources */,
+				4B098DA81FB2C66E00BE1AF0 /* AppDelegateExtension.swift in Sources */,
 				4BC1A2441FA2E85000F44A31 /* StopWords.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -665,7 +667,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -682,7 +684,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

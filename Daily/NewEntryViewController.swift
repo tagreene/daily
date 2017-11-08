@@ -78,7 +78,20 @@ class NewEntryViewController: UIViewController {
         let margins = view.layoutMarginsGuide
         let leadingConstraint = ourTextView.leadingAnchor.constraint(equalTo: margins.leadingAnchor)
         let trailingConstraint = ourTextView.trailingAnchor.constraint(equalTo: margins.trailingAnchor)
-        let heightConstraint = ourTextView.heightAnchor.constraint(equalToConstant: screenHeight * 0.48)
+        
+        if AppDelegate.isIPhone5() {
+            let heightConstraint = ourTextView.heightAnchor.constraint(equalToConstant: screenHeight * 0.44)
+            heightConstraint.isActive = true
+        } else if AppDelegate.isIPhoneX() {
+            let heightConstraint = ourTextView.heightAnchor.constraint(equalToConstant: screenHeight * 0.45)
+            heightConstraint.isActive = true
+        } else if AppDelegate.isIPhonePlus() {
+            let heightConstraint = ourTextView.heightAnchor.constraint(equalToConstant: screenHeight * 0.50)
+            heightConstraint.isActive = true
+        } else {
+            let heightConstraint = ourTextView.heightAnchor.constraint(equalToConstant: screenHeight * 0.48)
+            heightConstraint.isActive = true
+        }
         
         if #available(iOS 11, *) {
             let topConstraint = ourTextView.topAnchor.constraintEqualToSystemSpacingBelow(view.safeAreaLayoutGuide.topAnchor, multiplier: 1)
@@ -90,7 +103,6 @@ class NewEntryViewController: UIViewController {
         
         leadingConstraint.isActive = true
         trailingConstraint.isActive = true
-        heightConstraint.isActive = true
     }
     
     func initializeCancelButton() {

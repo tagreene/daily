@@ -109,12 +109,22 @@ class AnalyticsViewController: UIViewController {
         
         let margins = view.layoutMarginsGuide
         
-        if #available(iOS 11, *) {
-            mostCommonWordLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
-            averageWordLengthDescription.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
+        if AppDelegate.isIPhone5() {
+            if #available(iOS 11, *) {
+                mostCommonWordLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 4).isActive = true
+                averageWordLengthDescription.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
+            } else {
+                mostCommonWordLabel.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 4).isActive = true
+                averageWordLengthDescription.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 8).isActive = true
+            }
         } else {
-            mostCommonWordLabel.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 16).isActive = true
-            averageWordLengthDescription.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 20).isActive = true
+            if #available(iOS 11, *) {
+                mostCommonWordLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
+                averageWordLengthDescription.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
+            } else {
+                mostCommonWordLabel.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 16).isActive = true
+                averageWordLengthDescription.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 20).isActive = true
+            }
         }
         
         mostCommonWordDescription.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 16).isActive = true
@@ -128,6 +138,21 @@ class AnalyticsViewController: UIViewController {
         averageWordLengthLabel.topAnchor.constraint(equalTo: averageWordLengthDescription.bottomAnchor, constant: 0).isActive = true
         
         averageWordLengthDescription.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -16).isActive = true
+        
+        // Reduce Font for iPhone SE
+        if AppDelegate.isIPhone5() {
+            mostCommonWordLabel.font = .systemFont(ofSize: 24)
+            mostCommonWordDescription.font = .systemFont(ofSize: 16)
+            averageWordLengthLabel.font = .systemFont(ofSize: 24)
+            averageWordLengthDescription.font = .systemFont(ofSize: 16)
+            averageWordLengthDescription.text = "avg word count"
+        }
+        
+        // increase font for iPhone +
+        if AppDelegate.isIPhonePlus() {
+            mostCommonWordDescription.font = .systemFont(ofSize: 20)
+            averageWordLengthDescription.font = .systemFont(ofSize: 20)
+        }
     }
     
     func setUpBarChart() {
@@ -151,6 +176,10 @@ class AnalyticsViewController: UIViewController {
         
         activityChartLabel.bottomAnchor.constraint(equalTo: activityChart.topAnchor, constant: 0).isActive = true
         activityChartLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 16).isActive = true
+        
+        if AppDelegate.isIPhonePlus() {
+            activityChartLabel.font = .systemFont(ofSize: 20)
+        }
     }
     
     func setUpPieChart() {
@@ -201,6 +230,11 @@ class AnalyticsViewController: UIViewController {
         
         pieChartDescription.topAnchor.constraint(equalTo: pieChartLabel.bottomAnchor, constant: 0).isActive = true
         pieChartDescription.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -16).isActive = true
+        
+        if AppDelegate.isIPhonePlus() {
+            pieChartLabel.font = .systemFont(ofSize: 48)
+            pieChartDescription.font = .systemFont(ofSize: 20)
+        }
     }
     
     func setUpDateSelection() {
@@ -267,7 +301,6 @@ class AnalyticsViewController: UIViewController {
         submitButton.translatesAutoresizingMaskIntoConstraints = false
         submitButton.addTarget(self, action: #selector(submitButtonAction(_:)), for: .touchUpInside)
         view.addSubview(submitButton)
-        
         
         submitButton.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         submitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
@@ -455,7 +488,12 @@ class AnalyticsViewController: UIViewController {
         let totalSum = Double(data.reduce(0) { $0 + $1.1 })
         let average = totalSum / totalEntries
         let string = String(format: "%.1f", average)
-        return "average \(string) entries per day"
+        
+        if AppDelegate.isIPhone5() {
+            return "avg \(string) entries per day"
+        } else {
+            return "average \(string) entries per day"
+        }
     }
     
     func updateEntities() {
@@ -481,10 +519,15 @@ class AnalyticsViewController: UIViewController {
                 print("No Entries???")
                 return
             }
+            
+            print("OUR ENTRY ARRRAY\n\(ourEntryArray)")
             self.entries = ourEntryArray
         }
         
         self.entryTuples.removeAll()
+        
+        // increasing first date by 1 hour to account for occasional DST issues
+        firstDate = Date(timeInterval: 60 * 60, since: firstDate)
         while firstDate < lastDate {
             let countLastDate = Date(timeInterval: 60 * 60 * 24, since: firstDate)
             let filteredEntries = entries.filter { $0.date! >= firstDate && $0.date! < countLastDate }
@@ -493,5 +536,4 @@ class AnalyticsViewController: UIViewController {
         }
         print("E N T R Y  T U P L E S \n \(entryTuples) \n _______________________ \n")
     }
-    
 }

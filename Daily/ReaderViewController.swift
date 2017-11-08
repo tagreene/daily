@@ -173,7 +173,12 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource {
         let margins = view.layoutMarginsGuide
         containerView.leadingAnchor.constraint(equalTo: margins.leadingAnchor).isActive = true
         containerView.trailingAnchor.constraint(equalTo: margins.trailingAnchor).isActive = true
-        containerView.bottomAnchor.constraint(equalTo: startDateButton.topAnchor, constant: -32).isActive = true
+        
+        if AppDelegate.isIPhone5() {
+            containerView.bottomAnchor.constraint(equalTo: startDateButton.topAnchor, constant: -20).isActive = true
+        } else {
+            containerView.bottomAnchor.constraint(equalTo: startDateButton.topAnchor, constant: -32).isActive = true
+        }
         
         if #available(iOS 11, *) {
             containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
@@ -273,6 +278,9 @@ class ReaderViewController: UIViewController, UICollectionViewDataSource {
         timeFormatter.pmSymbol = "pm"
         timeFormatter.locale = Locale(identifier: "en_US_POSIX")
         entriesDict.removeAll()
+        
+        // Increasing firstDate by 1 hour to handle any DST issues
+        firstDate = Date(timeInterval: 60 * 60, since: firstDate)
         while firstDate < lastDate {
             print(firstDate)
             print(lastDate)
